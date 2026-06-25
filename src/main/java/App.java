@@ -1,0 +1,975 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Random;
+
+public class App {
+    /*
+        Criado esses números inteiros para maior facilidade na manipulação de vetores.
+     */
+    private static final int MAX_TEACHERS = 10;
+    private static final int MAX_COURSES = 3;
+    private static final int MAX_SUBJECTS = 39;
+    private static final int MAX_STUDENTS = 90;
+    private static final int MAX_CLASSES = 10;
+    private static final int MAX_ASSESSMENTS = 59;
+    private static final int MAX_GRADES = 200;
+
+    private static final int MAX_ID_GENERATE = 200;
+
+    /*
+        Vetores dos objetos.
+        Todos baseados nos exemplos dados em aula.
+     */
+    private static Teacher[] teachers = new Teacher[MAX_TEACHERS];
+    private static Course[] courses = new Course[MAX_COURSES];
+    private static Subject[] subjects = new Subject[MAX_SUBJECTS];
+    private static Student[] students = new Student[MAX_STUDENTS];
+    private static Class[] classes = new Class[MAX_CLASSES];
+    private static Assessment[] assessments = new Assessment[MAX_ASSESSMENTS];
+    private static Grade[] grades = new Grade[MAX_GRADES];
+
+    private static int[] idGenerated = new int[MAX_ID_GENERATE];
+
+    /*
+        Números inteiros criados para verificações e validações.
+     */
+    private static int teachersNum = 0, classesNum = 0, studentNum = 0, gradeNum = 0, idNum = 0;
+
+    /*
+        Main
+     */
+    public static void main(String[] args) throws Exception {
+        int option;
+
+        //BufferedReader foi indicado pela professora/doutora Aline e pesquisado a utilização no google
+        BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
+
+        /*
+            Inicializadores criados para melhor organização e menos poluição do main.
+         */
+        initializeCourses();
+        initializeSubjects();
+        initializeAssessmentes();
+
+        /*
+            Menu principal do software.
+         */
+        do {
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.println("Sistema Acadêmico - Página Inicial");
+            System.out.println(" ");
+            System.out.println("0 - Encerrar o programa");
+            System.out.println("1 - Cadastros");
+            System.out.println("2 - Alterações");
+            System.out.println("3 - Informações");
+            System.out.println("4 - Rankings");
+            System.out.println("5 - Busca");
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.printf("Escolha uma opção: ");
+
+            option = Integer.parseInt(scanner.readLine());
+
+            switch (option) {
+                case 0:
+                    System.out.println("Programa encerrado.");
+                    break;
+                case 1:
+                    registers(scanner);
+                    break;
+                case 2:
+                    changes(scanner);
+                    break;
+                case 3:
+                    informations(scanner);
+                    break;
+                case 4:
+                    rankings(scanner);
+                    break;
+                case 5:
+                    search(scanner);
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (option != 0);
+
+        scanner.close();
+    }
+
+    /*
+        Inicializadores de objetos pré-cadastrados, conforme combinado em aula e
+        comentado pela professora.
+     */
+    private static void initializeCourses() {
+        courses[0] = new Course(2510, "Engenharia de Software", 8, 12);
+        courses[1] = new Course(9310, "Engenharia Mecânica", 10, 12);
+        courses[2] = new Course(7110, "Medicina", 10, 15);
+    }
+
+    private static void initializeSubjects() {
+        subjects[0] = new Subject(1001, "Algoritmos e Lógica de Programação", 60);
+        subjects[1] = new Subject(1002, "Programação Orientada a Objetos", 30);
+        subjects[2] = new Subject(1003, "Estrutura de Dados", 40);
+        subjects[3] = new Subject(1004, "Banco de Dados", 50);
+        subjects[4] = new Subject(1005, "Engenharia de Requisitos", 90);
+        subjects[5] = new Subject(1006, "Arquitetura de Software", 240);
+        subjects[6] = new Subject(1007, "Desenvolvimento Web", 70);
+        subjects[7] = new Subject(1008, "Testes de Software", 80);
+        subjects[8] = new Subject(1009, "Gerência de Projetos", 120);
+        subjects[9] = new Subject(1010, "Computação em Nuvem", 60);
+        subjects[10] = new Subject(1011, "Segurança da Informação", 90);
+        subjects[11] = new Subject(1012, "Inteligência Artificial",30);
+        subjects[12] = new Subject(2001, "Cálculo Diferencial e Integral", 120);
+        subjects[13] = new Subject(2002, "Física Geral", 80);
+        subjects[14] = new Subject(2003, "Desenho Técnico", 40);
+        subjects[15] = new Subject(2004, "Mecânica dos Sólidos", 90);
+        subjects[16] = new Subject(2005, "Resistência dos Materiais", 80);
+        subjects[17] = new Subject(2006, "Termodinâmica", 240);
+        subjects[18] = new Subject(2007, "Mecânica dos Fluidos",60);
+        subjects[19] = new Subject(2008, "Processos de Fabricação", 80);
+        subjects[20] = new Subject(2009, "Elementos de Máquinas", 40);
+        subjects[21] = new Subject(2010, "Controle e Automação", 80);
+        subjects[22] = new Subject(2011, "Transferência de Calor", 90);
+        subjects[23] = new Subject(2012, "Projeto Mecânico", 120);
+        subjects[24] = new Subject(3001, "Anatomia Humana", 80);
+        subjects[25] = new Subject(3002, "Histologia", 50);
+        subjects[26] = new Subject(3003, "Embriologia", 120);
+        subjects[27] = new Subject(3004, "Bioquímica", 240);
+        subjects[28] = new Subject(3005, "Fisiologia Humana", 360);
+        subjects[29] = new Subject(3006, "Patologia Geral", 80);
+        subjects[30] = new Subject(3007, "Farmacologia", 160);
+        subjects[31] = new Subject(3008, "Microbiologia", 80);
+        subjects[32] = new Subject(3009, "Imunologia", 90);
+        subjects[33] = new Subject(3010, "Clínica Médica", 90);
+        subjects[34] = new Subject(3011, "Cirurgia Geral", 80);
+        subjects[35] = new Subject(3012, "Pediatria", 30);
+        subjects[36] = new Subject(3013, "Ginecologia e Obstetrícia", 60);
+        subjects[37] = new Subject(3014, "Neurologia", 50);
+        subjects[38] = new Subject(3015, "Medicina Preventiva", 70);
+    }
+
+    private static void initializeAssessmentes() {
+        assessments[0] = new Assessment("Prova 1", 0.25, subjects[0], classes);
+        assessments[1] = new Assessment("Prova 2", 0.5, subjects[0], classes);
+        assessments[2] = new Assessment("Trabalho 1", 0.25, subjects[0], classes);
+        assessments[3] = new Assessment("Prova 1", 0.3, subjects[1], classes);
+        assessments[4] = new Assessment("Prova 2", 0.3, subjects[1], classes);
+        assessments[5] = new Assessment("Trabalho 1", 0.2, subjects[1], classes);
+        assessments[6] = new Assessment("Trabalho 2", 0.1, subjects[1], classes);
+        assessments[7] = new Assessment("Trabalho 3", 0.1, subjects[1], classes);
+        assessments[8] = new Assessment("Prova 1", 0.6, subjects[2], classes);
+        assessments[9] = new Assessment("Trabalho 1", 0.3, subjects[2], classes);
+        assessments[10] = new Assessment("Trabalho 2", 0.3, subjects[2], classes);
+        assessments[11] = new Assessment("Trabalho 1", 0.3, subjects[3], classes);
+        assessments[12] = new Assessment("Trabalho 2", 0.3, subjects[3], classes);
+        assessments[13] = new Assessment("Trabalho 3", 0.4, subjects[3], classes);
+        assessments[14] = new Assessment("Prova 1", 0.5, subjects[4], classes);
+        assessments[15] = new Assessment("Prova 2", 0.5, subjects[4], classes);
+        assessments[16] = new Assessment("Prova 1", 0.5, subjects[5], classes);
+        assessments[17] = new Assessment("Prova 2", 0.5, subjects[5], classes);
+        assessments[18] = new Assessment("Prova 1", 0.5, subjects[6], classes);
+        assessments[19] = new Assessment("Prova 2", 0.5, subjects[6], classes);
+        assessments[20] = new Assessment("Prova 1", 0.5, subjects[7], classes);
+        assessments[21] = new Assessment("Prova 2", 0.5, subjects[7], classes);
+        assessments[22] = new Assessment("Prova 1", 0.5, subjects[8], classes);
+        assessments[23] = new Assessment("Prova 2", 0.5, subjects[8], classes);
+        assessments[24] = new Assessment("Prova 1", 0.5, subjects[9], classes);
+        assessments[25] = new Assessment("Prova 2", 0.5, subjects[9], classes);
+        assessments[26] = new Assessment("Prova 1", 0.5, subjects[10], classes);
+        assessments[27] = new Assessment("Prova 2", 0.5, subjects[10], classes);
+        assessments[28] = new Assessment("Prova 1", 0.5, subjects[11], classes);
+        assessments[29] = new Assessment("Prova 2", 0.5, subjects[11], classes);
+        assessments[30] = new Assessment("Prova 1", 0.5, subjects[12], classes);
+        assessments[31] = new Assessment("Prova 2", 0.5, subjects[12], classes);
+        assessments[32] = new Assessment("Prova 1", 0.5, subjects[13], classes);
+        assessments[33] = new Assessment("Prova 2", 0.5, subjects[13], classes);
+        assessments[34] = new Assessment("Prova 1", 1.0, subjects[14], classes);
+        assessments[35] = new Assessment("Prova 1", 1.0, subjects[15], classes);
+        assessments[36] = new Assessment("Prova 1", 1.0, subjects[16], classes);
+        assessments[37] = new Assessment("Prova 1", 1.0, subjects[17], classes);
+        assessments[38] = new Assessment("Prova 1", 1.0, subjects[18], classes);
+        assessments[39] = new Assessment("Prova 1", 1.0, subjects[19], classes);
+        assessments[40] = new Assessment("Prova 1", 1.0, subjects[20], classes);
+        assessments[41] = new Assessment("Prova 1", 1.0, subjects[21], classes);
+        assessments[42] = new Assessment("Prova 1", 1.0, subjects[22], classes);
+        assessments[43] = new Assessment("Prova 1", 1.0, subjects[23], classes);
+        assessments[44] = new Assessment("Prova 1", 1.0, subjects[24], classes);
+        assessments[45] = new Assessment("Prova 1", 1.0, subjects[25], classes);
+        assessments[46] = new Assessment("Prova 1", 1.0, subjects[26], classes);
+        assessments[47] = new Assessment("Prova 1", 1.0, subjects[27], classes);
+        assessments[48] = new Assessment("Prova 1", 1.0, subjects[28], classes);
+        assessments[49] = new Assessment("Prova 1", 1.0, subjects[29], classes);
+        assessments[50] = new Assessment("Prova 1", 1.0, subjects[30], classes);
+        assessments[51] = new Assessment("Prova 1", 1.0, subjects[31], classes);
+        assessments[52] = new Assessment("Prova 1", 1.0, subjects[32], classes);
+        assessments[53] = new Assessment("Prova 1", 1.0, subjects[33], classes);
+        assessments[54] = new Assessment("Prova 1", 1.0, subjects[34], classes);
+        assessments[55] = new Assessment("Prova 1", 1.0, subjects[35], classes);
+        assessments[56] = new Assessment("Prova 1", 1.0, subjects[36], classes);
+        assessments[57] = new Assessment("Prova 1", 1.0, subjects[37], classes);
+        assessments[58] = new Assessment("Prova 1", 1.0, subjects[38], classes);
+    }
+
+    /*
+        Menu de registros, para cadastro de alunos, professores, turmas, notas e adicionar
+        um aluno em determinada turma.
+     */
+    private static void registers(BufferedReader scanner) throws Exception {
+        int option;
+
+        do {
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.println("Sistema Acadêmico - Cadastros");
+            System.out.println(" ");
+            System.out.println("0 - Voltar ao menu principal");
+            System.out.println("1 - Cadastrar professor");
+            System.out.println("2 - Cadastrar aluno");
+            System.out.println("3 - Cadastrar turma");
+            System.out.println("4 - Cadastrar nota");
+            System.out.println("5 - Adicionar aluno à turma");
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.printf("Escolha uma opção: ");
+
+            option = Integer.parseInt(scanner.readLine());
+
+            switch (option) {
+                case 0:
+                    System.out.println("Você voltou com sucesso.");
+                    break;
+                case 1:
+                    registerTeacher(scanner);
+                    break;
+                case 2:
+                    registerStudent(scanner);
+                    break;
+                case 3:
+                    registerClass(scanner);
+                    break;
+                case 4:
+                    registerGrade(scanner);
+                    break;
+                case 5:
+                    addStudentToClass(scanner);
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (option != 0);
+    }
+
+    /*
+        Funcionalidades de cadastros gerais, de professores, alunos, turmas e notas,
+        com validações para aqueles que dependem um do outro.
+     */
+    private static void registerTeacher(BufferedReader scanner) throws Exception {
+        if (teachersNum < MAX_TEACHERS) {
+            //Classe Random e utilização pesquisada no Google
+            int numTeacher = generateId();
+
+            String name, graduation;
+
+            System.out.print("Digite o nome do professor: ");
+            name = scanner.readLine();
+
+            System.out.print("Digite a graduação do professor: ");
+            graduation = scanner.readLine();
+
+            teachers[teachersNum] = new Teacher(numTeacher, name, graduation);
+
+            teachersNum++;
+        } else {
+            System.out.println("Você atingiu o limite de professores registrados!");
+        }
+    }
+
+    private static void registerClass(BufferedReader scanner) throws Exception {
+        if (classesNum < MAX_CLASSES) {
+            int numClass = generateId(), numberClass, option;
+
+            String input;
+
+            do {
+                System.out.printf("Digite o número da turma (Ex.: 30): ");
+                input = scanner.readLine();
+                //\d = numeros inteiros e + mais de um numero
+            } while (!input.matches("\\d+")); //matches estudado via https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match
+
+            numberClass = Integer.parseInt(input);
+            String className = "Turma " + numberClass;
+
+            Teacher teacher;
+
+            if (teachersNum > 0) {
+                do {
+                    System.out.println("Escolha um professor para a turma.");
+
+                    for (int i = 0; i < teachersNum; i++) {
+                        System.out.println((i + 1) + " - " + teachers[i].getName());
+                    }
+
+                    System.out.print("Opção: ");
+                    option = Integer.parseInt(scanner.readLine());
+                } while (option > teachersNum);
+
+                teacher = teachers[option - 1];
+            } else {
+                System.out.println("Você não possui professores registrados!");
+                return;
+            }
+
+            do {
+                System.out.println("Escolha uma matéria para aderir à turma.");
+                for (int i = 0; i < subjects.length; i++) {
+                    System.out.println((i + 1) + " - " + subjects[i].getName());
+                }
+
+                System.out.print("Opção: ");
+                option = Integer.parseInt(scanner.readLine());
+            } while (option < 1 || option > subjects.length);
+
+            Subject subject = subjects[option - 1];
+
+            classes[classesNum] = new Class(numClass, className, teacher, subject);
+
+            classesNum++;
+        } else {
+            System.out.println("Você atingiu o limite de turmas registradas!");
+        }
+    }
+
+    private static void registerStudent(BufferedReader scanner) throws Exception {
+        if (studentNum < MAX_STUDENTS) {
+            int numStudent = generateId(), studentAge, option;
+
+            System.out.print("Digite o nome do estudante: ");
+            String studentName = scanner.readLine();
+
+            System.out.print("Digite a idade do estudante: ");
+            studentAge = Integer.parseInt(scanner.readLine());
+
+            do {
+                System.out.println("Escolha o curso do estudante.");
+                for (int i = 0; i < courses.length; i++) {
+                    System.out.println((i + 1) + " - " + courses[i].getName());
+                }
+
+                System.out.print("Opção: ");
+                option = Integer.parseInt(scanner.readLine());
+            } while (option < 1 || option > courses.length);
+
+            Course course = courses[option - 1];
+
+            students[studentNum] = new Student(numStudent, studentName, studentAge, course);
+
+            studentNum++;
+        } else {
+            System.out.println("Você atingiu o limite de alunos registrados.");
+        }
+    }
+
+    private static void registerGrade(BufferedReader scanner) throws Exception {
+        if (gradeNum < MAX_GRADES) {
+            int option;
+
+            Class classSelected;
+
+            if (classesNum > 0) {
+                do {
+                    System.out.println("Escolha a turma que deseja cadastrar a nota.");
+                    System.out.printf("%-10s %-25s %-35s %-6s%n", "Opção", "Turma", "Matéria", "Alunos");
+
+                    for (int i = 0; i < classesNum; i++) {
+                        System.out.printf("%-10d %-25s %-35s %-6d%n", (i + 1), classes[i].getName(), classes[i].getSubject().getName(), classes[i].getStudentsNum());
+                    }
+
+                    System.out.print("Opção: ");
+                    option = Integer.parseInt(scanner.readLine());
+                } while (option < 1 || option > classesNum);
+
+                classSelected = classes[option - 1];
+            } else {
+                System.out.println("Você não registrou nenhuma turma para adicionar nota!");
+                return;
+            }
+
+            Student student;
+
+            if (classSelected.getStudentsNum() > 0) {
+                do {
+                    System.out.println("Escolha qual aluno você deseja adicionar a nota.");
+                    System.out.printf("%-10s %-25s%n", "Opção", "Aluno");
+
+                    for (int i = 0; i < classSelected.getStudentsNum(); i++) {
+                        System.out.printf("%-10d %-25s%n", (i + 1), classSelected.getStudents()[i].getName());
+                    }
+
+                    System.out.print("Opção: ");
+                    option = Integer.parseInt(scanner.readLine());
+                } while (option < 1 || option > classSelected.getStudentsNum());
+
+                student = classSelected.getStudents()[option - 1];
+            } else {
+                System.out.println("Você não adicionou nenhum aluno nessa turma!");
+                return;
+            }
+
+            do {
+                System.out.println("Escolha qual avaliação você deseja cadastrar nota.");
+                System.out.printf("%-10s %-25s%n", "Opção", "Avaliação");
+
+                for (int i = 0; i < assessments.length; i++) {
+                    if (assessments[i].getSubject() == classSelected.getSubject()) {
+                        System.out.printf("%-10d %-25s%n", (i + 1), assessments[i].getDescription());
+                    }
+                }
+
+                System.out.printf("Opção: ");
+                option = Integer.parseInt(scanner.readLine());
+            } while (option < 1 || option > assessments.length);
+
+            Assessment assessment = assessments[option - 1];
+
+            double value;
+
+            do {
+                System.out.print("Qual o valor da nota: ");
+                value = Double.parseDouble(scanner.readLine());
+            } while (value < 0 || value > 10);
+
+            grades[gradeNum] = new Grade(student, assessment, value);
+
+            gradeNum++;
+        } else {
+            System.out.println("Você atingiu o limite de notas digitadas.");
+        }
+    }
+
+    /*
+        Funcionalidade de adicionar um aluno em alguma turma.
+     */
+    private static void addStudentToClass(BufferedReader scanner) throws Exception{
+        if (classesNum == 0) {
+            System.out.println("Você não registrou nenhuma turma!");
+            return;
+        }
+
+        if (studentNum == 0) {
+            System.out.println("Você não registrou nenhum estudante!");
+            return;
+        }
+
+        System.out.println("Escolha qual turma deseja adicionar um aluno.");
+
+        int count = 0, option, seccondCount = 0;
+
+        do {
+            for (int i = 0; i < classesNum; i++) {
+                if (classes[i].getStudentsNum() < classes[i].getStudents().length) {
+                    System.out.println((count + 1) + " - " + classes[i].getName());
+                    count++;
+                }
+            }
+
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > count);
+
+        Class classSelected = classes[option - 1];
+
+        Student[] avaibleStudents = new Student[MAX_STUDENTS];
+
+        do {
+            for (int i = 0; i < studentNum; i++) {
+                for (int j = 0; j < classSelected.getStudentsNum(); j++) {
+                    if (students[i].getIdentification() != classSelected.getStudents()[j].getIdentification()) {
+                        avaibleStudents[seccondCount] = students[i];
+                        System.out.printf("%-10d - %-35s | %-25s%n", (seccondCount + 1), students[i].getName(), students[i].getCourse().getName());
+                        seccondCount++;
+                    }
+                }
+            }
+
+            System.out.printf("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > seccondCount);
+
+        Student student = avaibleStudents[option - 1];
+
+        if (seccondCount == 0) {
+            System.out.println("Todos os alunos já estão cadastrados nessa turma!");
+            return;
+        }
+
+        classSelected.getStudents()[classSelected.getStudentsNum()] = student;
+        classSelected.setStudentsNum(classSelected.getStudentsNum() + 1);
+    }
+
+    /*
+        Menu para manipulação de dados de professores, alunos, turmas e
+        notas já registradas.
+     */
+    private static void changes(BufferedReader scanner) throws Exception {
+        int option;
+
+        do {
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.println("Sistema Acadêmico - Alterações");
+            System.out.println(" ");
+            System.out.println("0 - Voltar ao menu principal");
+            System.out.println("1 - Alterações do professor");
+            System.out.println("2 - Alterações do aluno");
+            System.out.println("3 - Alterações das turmas");
+            System.out.println("4 - Alterações de notas");
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.printf("Escolha uma opção: ");
+
+            option = Integer.parseInt(scanner.readLine());
+
+            switch (option) {
+                case 0:
+                    System.out.println("Você voltou com sucesso.");
+                    break;
+                case 1:
+                    // changesTeacher(scanner);
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (option != 0);
+    }
+
+    /*
+        Menus para cada uma das opções do menu anterior de Alterações, para
+        maior opções de alterações.
+     */
+    private static void changesTeacher(BufferedReader scanner) throws Exception{
+        int option;
+
+        do {
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.println("Sistema Acadêmico - Alterações - Professor");
+            System.out.println(" ");
+            System.out.println("0 - Voltar ao menu de alterações");
+            System.out.println("1 - Alterar mátricula do professor");
+            System.out.println("2 - Alterar nome do progessor");
+            System.out.println("3 - Alterar graduação do professor");
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.printf("Escolha uma opção: ");
+
+            option = Integer.parseInt(scanner.readLine());
+
+            switch (option) {
+                case 0:
+                    System.out.println("Você voltou com sucesso.");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (option != 0);
+    }
+
+    private static void changesStudent(BufferedReader scanner) throws Exception {
+        int option;
+
+        do {
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.println("Sistema Acadêmico - Alterações - Aluno");
+            System.out.println(" ");
+            System.out.println("0 - Voltar ao menu principal");
+            System.out.println("1 - Alterar mátricula do aluno");
+            System.out.println("2 - Alterar nome do aluno");
+            System.out.println("3 - Alterar idade do aluno");
+            System.out.println("4 - Alterar curso do aluno");
+            System.out.println("5 - Alterar semestre do aluno");
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.printf("Escolha uma opção: ");
+
+            option = Integer.parseInt(scanner.readLine());
+
+            switch (option) {
+                case 0:
+                    System.out.println("Você voltou com sucesso.");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (option != 0);
+    }
+
+    private static void changesClass(BufferedReader scanner) throws Exception {
+        int option;
+
+        do {
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.println("Sistema Acadêmico - Alterações - Turma");
+            System.out.println(" ");
+            System.out.println("0 - Voltar ao menu principal");
+            System.out.println("1 - Alterar mátricula da turma");
+            System.out.println("2 - Alterar nome da turma");
+            System.out.println("3 - Alterar professor da turma");
+            System.out.println("4 - Alterar alunos da turma");
+            System.out.println("5 - Alterar matéria da turma");
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.printf("Escolha uma opção: ");
+
+            option = Integer.parseInt(scanner.readLine());
+
+            switch (option) {
+                case 0:
+                    System.out.println("Você voltou com sucesso.");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (option != 0);
+    }
+
+    private static void changesGrade(BufferedReader scanner) throws Exception {
+        int option;
+
+        do {
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.println("Sistema Acadêmico - Alterações - Aluno");
+            System.out.println(" ");
+            System.out.println("0 - Voltar ao menu principal");
+            System.out.println("1 - Alterar mátricula do aluno");
+            System.out.println("2 - Alterar nome do aluno");
+            System.out.println("3 - Alterar idade do aluno");
+            System.out.println("4 - Alterar curso do aluno");
+            System.out.println("5 - Alterar semestre do aluno");
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.printf("Escolha uma opção: ");
+
+            option = Integer.parseInt(scanner.readLine());
+
+            switch (option) {
+                case 0:
+                    System.out.println("Você voltou com sucesso.");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (option != 0);
+    }
+
+    /*
+        Menu de informações para selecionar se deseja ver informações de
+        alunos, turmas, professores, cursos, matérias, avaliações, médias,
+        todas as notas e médias gerais.
+     */
+    private static void informations(BufferedReader scanner) throws Exception {
+        int option;
+
+        do {
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.println("Sistema Acadêmico - Informações");
+            System.out.println(" ");
+            System.out.println("0 - Voltar ao menu principal");
+            System.out.println("1 - Informações de aluno");
+            System.out.println("2 - Informações de turma");
+            System.out.println("3 - Informações de professores");
+            System.out.println("4 - Informações de cursos");
+            System.out.println("5 - Informações de matérias");
+            System.out.println("6 - Informações de avaliações");
+            System.out.println("7 - Informações de notas");
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.printf("Escolha uma opção: ");
+
+            option = Integer.parseInt(scanner.readLine());
+
+            switch (option) {
+                case 0:
+                    System.out.println("Você voltou com sucesso.");
+                    break;
+                case 1:
+                    informationsStudents(scanner);
+                    break;
+                case 2:
+                    informationsClasses();
+                    break;
+                case 3:
+                    informationsTeacher();
+                    break;
+                case 4:
+                    informationCourses();
+                    break;
+                case 5:
+                    informationSubject();
+                    break;
+                case 6:
+                    informationAssessment();
+                    break;
+                case 7:
+                    informationGrades();
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (option != 0);
+    }
+
+    /*
+        Informações listado de todos os professores.
+     */
+    private static void informationsTeacher() {
+        if (teachersNum == 0) {
+            System.out.println("Nenhum professor cadastrado!");
+            return;
+        }
+
+        System.out.println("Informações dos professores:");
+        System.out.printf("%-15s %-35s %-20s%n", "Mátricula", "Professor", "Graduação do professor");
+
+        for (int i = 0; i < teachersNum; i++) {
+            System.out.printf("%-15d %-25s %-20s%n", teachers[i].getIdentification(), teachers[i].getName(), teachers[i].getGraduation());
+        }
+    }
+
+    /*
+        Menu para escolher se deseja ver as informações de todos os alunos, ou
+        escolher um aluno especifico para ver todos os dados detalhadamente.
+     */
+    private static void informationsStudents(BufferedReader scanner) throws Exception {
+        System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+        System.out.println("Sistema Acadêmico - Informações - Aluno");
+        System.out.println(" ");
+        System.out.println("1 - Informações gerais de todos alunos");
+        System.out.println("2 - Informações detalhadas de alunos");
+        System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+        System.out.printf("Escolha uma opção: ");
+
+        int option = Integer.parseInt(scanner.readLine());
+
+        switch (option) {
+            case 1:
+                informationsStudentsAll();
+                break;
+            case 2:
+                informationsStudentsSelect(scanner);
+                break;
+            default:
+                System.out.println("Opção inválida.");
+        }
+    }
+
+    /*
+        Informações e listagem de todos os alunos existentes.
+     */
+    private static void informationsStudentsAll() {
+        if (studentNum == 0) {
+            System.out.println("Nenhum aluno cadastrado!");
+            return;
+        }
+
+        System.out.println("Informação dos alunos:");
+        System.out.printf("%-15s %-35s %-10s %-25s %-10s%n", "Mátricula", "Aluno", "Idade", "Curso", "Semestre");
+
+        for (int i = 0; i < studentNum; i++) {
+            System.out.printf("%-15d %-35s %-10d %-25s %-10d", students[i].getIdentification(), students[i].getName(), students[i].getAge(), students[i].getCourse().getName(), students[i].getSemester());
+        }
+    }
+
+    /*
+        Informações detalhadas do aluno desejado.
+     */
+    private static void informationsStudentsSelect(BufferedReader scanner) throws Exception {
+        if (studentNum == 0) {
+            System.out.println("Nenhum aluno cadastrado!");
+            return;
+        }
+
+        int option;
+
+        do {
+            System.out.println("Escolha um aluno:");
+
+            for (int i = 0; i < studentNum; i++) {
+                System.out.println((i + 1) + " - " + students[i].getName());
+            }
+
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+
+        } while (option < 1 || option > studentNum);
+
+        Student selected = students[option - 1];
+
+        System.out.println("\nInformações do Aluno");
+        System.out.println("Nome: " + selected.getName());
+        System.out.println("Idade: " + selected.getAge());
+        System.out.println("Curso: " + selected.getCourse().getName());
+        System.out.println("Semestre: " + selected.getSemester());
+        System.out.println("Faltam " + (selected.getCourse().getDuration() - selected.getSemester()) + " semestres.");
+
+        System.out.println("\nNotas:");
+
+        double sum = 0;
+        int count = 0;
+
+        for (int i = 0; i < gradeNum; i++) {
+            if (grades[i].getStudent().getIdentification() == selected.getIdentification()) {
+                System.out.println(grades[i].getAssessment().getDescription() + " | Nota: " + grades[i].getValue());
+                sum += grades[i].getValue();
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            System.out.println("Nenhuma nota registrada.");
+        } else {
+            double average = sum / count;
+            System.out.println("\nMédia final: " + average);
+
+            if (average >= 7) {
+                System.out.println("Situação: APROVADO");
+            } else {
+                System.out.println("Situação: REPROVADO");
+            }
+        }
+    }
+
+    /*
+        Informações de todas as turmas, cursos, matérias e avaliações.
+     */
+    private static void informationsClasses() {
+        if (classesNum == 0) {
+            System.out.println("Nenhuma turma cadastrada!");
+            return;
+        }
+
+        System.out.println("Informações das turmas:");
+        System.out.printf("%-15s %-25s %-25s %-10s %-25s%n", "Identificação", "Turma", "Professor", "Alunos", "Matéria");
+
+        for (int i = 0; i < classesNum; i++) {
+            System.out.printf("%-15d %-25s %-25s %-10d %-25s%n", classes[i].getNumber(), classes[i].getName(), classes[i].getTeacher().getName(), classes[i].getStudentsNum(), classes[i].getSubject().getName());
+        }
+    }
+
+    private static void informationCourses() {
+        System.out.println("Informações dos cursos:");
+        System.out.printf("%-15s %-25s %-15s %-10s%n", "Identificação", "Curso", "Duração", "Matérias");
+
+        for (int i = 0; i < courses.length; i++) {
+            System.out.printf("%-15d %-25s %-15d %-10d%n", courses[i].getCode(), courses[i].getName(), courses[i].getDuration(), courses[i].getTotalSubjects());
+        }
+    }
+
+    private static void informationSubject() {
+        System.out.println("Informação das matérias:");
+        System.out.printf("%-15s %-25s %-15s%n", "Identificação", "Matéria", "Carga Horária");
+
+        for (int i = 0; i < subjects.length; i++) {
+            System.out.printf("%-15d %-25s %-15d%n", subjects[i].getCode(), subjects[i].getName(), subjects[i].getWorkload());
+        }
+    }
+
+    private static void informationAssessment() {
+        System.out.println("Informações da avaliação:");
+        System.out.printf("%-15s %-5s %-25s %-7s%n", "Avaliação", "Peso", "Matéria", "Turmas");
+
+        for (int i = 0; i < assessments.length; i++) {
+            System.out.printf("%-15s %-5.2f %-35s %-7d%n", assessments[i].getDescription(), assessments[i].getWeight(), assessments[i].getSubject().getName(), assessments[i].getAcademicClass().length);
+        }
+    }
+
+    private static void informationGrades() {
+        if (gradeNum == 0) {
+            System.out.println("Nenhuma nota cadastrada.");
+            return;
+        }
+
+        System.out.printf("%-25s %-35s %-20s %-10s%n", "Aluno", "Matéria", "Avaliação", "Nota");
+
+        for (int i = 0; i < gradeNum; i++) {
+            Grade grade = grades[i];
+            System.out.printf("%-25s %-35s %-20s %-10.2f%n", grade.getStudent().getName(), grade.getAssessment().getSubject().getName(), grade.getAssessment().getDescription(), grade.getValue());
+        }
+    }
+
+    /*
+        Menu de ranking dos melhores alunos, notas, turmas, médias...
+     */
+    private static void rankings(BufferedReader scanner) throws Exception {
+        int option;
+
+        do {
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.println("Sistema Acadêmico - Rankings");
+            System.out.println(" ");
+            System.out.println("0 - Voltar ao menu principal");
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.printf("Escolha uma opção: ");
+
+            option = Integer.parseInt(scanner.readLine());
+
+            switch (option) {
+                case 0:
+                    System.out.println("Você voltou com sucesso.");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (option != 0);
+    }
+
+    /*
+        Menu para poder buscar alunos, turmass, cursos, matérias e professores.
+     */
+    private static void search(BufferedReader scanner) throws Exception {
+        int option;
+
+        do {
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.println("Sistema Acadêmico - Busca");
+            System.out.println(" ");
+            System.out.println("0 - Voltar ao menu principal");
+            System.out.println("1 - Buscar professores");
+            System.out.println("2 - Buscar aluno");
+            System.out.println("3 - Buscar turma");
+            System.out.println("4 - Buscar curso");
+            System.out.println("5 - Buscar matéria");
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.printf("Escolha uma opção: ");
+
+            option = Integer.parseInt(scanner.readLine());
+
+            switch (option) {
+                case 0:
+                    System.out.println("Você voltou com sucesso.");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (option != 0);
+    }
+
+    /*
+        Gerador de ID, criado para facilitar nos registros/cadastros de turmas, alunos e professores.
+     */
+    private static int generateId() {
+        Random random = new Random();
+        int id;
+        boolean exists;
+
+        do {
+            id = random.nextInt(90000000) + 10000000;
+            exists = false;
+
+            for (int i = 0; i < idNum; i++) {
+                if (idGenerated[i] == id) {
+                    exists = true;
+                }
+            }
+        } while (exists == true);
+
+        idGenerated[idNum] = id;
+        idNum++;
+        return id;
+    }
+}
