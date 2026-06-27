@@ -63,7 +63,8 @@ public class App {
             System.out.println("2 - Alterações");
             System.out.println("3 - Informações");
             System.out.println("4 - Rankings");
-            System.out.println("5 - Busca");
+            System.out.println("5 - Médias");
+            System.out.println("6 - Busca");
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
@@ -86,6 +87,9 @@ public class App {
                     rankings(scanner);
                     break;
                 case 5:
+                    averages(scanner);
+                    break;
+                case 6:
                     search(scanner);
                     break;
                 default:
@@ -530,13 +534,16 @@ public class App {
                     System.out.println("Você voltou com sucesso.");
                     break;
                 case 1:
-                    // changesTeacher(scanner);
+                    changesTeacher(scanner);
                     break;
                 case 2:
+                    changesStudent(scanner);
                     break;
                 case 3:
+                    changesClass(scanner);
                     break;
                 case 4:
+                    changesGrade(scanner);
                     break;
                 default:
                     System.out.println("Opção inválida.");
@@ -548,7 +555,12 @@ public class App {
         Menus para cada uma das opções do menu anterior de Alterações, para
         maior opções de alterações.
      */
-    private static void changesTeacher(BufferedReader scanner) throws Exception{
+    private static void changesTeacher(BufferedReader scanner) throws Exception {
+        if (teachersNum == 0) {
+            System.out.println("Nenhum professor registrado.");
+            return;
+        }
+
         int option;
 
         do {
@@ -556,9 +568,8 @@ public class App {
             System.out.println("Sistema Acadêmico - Alterações - Professor");
             System.out.println(" ");
             System.out.println("0 - Voltar ao menu de alterações");
-            System.out.println("1 - Alterar mátricula do professor");
-            System.out.println("2 - Alterar nome do progessor");
-            System.out.println("3 - Alterar graduação do professor");
+            System.out.println("1 - Alterar nome do progessor");
+            System.out.println("2 - Alterar graduação do professor");
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
@@ -568,13 +579,68 @@ public class App {
                 case 0:
                     System.out.println("Você voltou com sucesso.");
                     break;
+                case 1:
+                    changesNameTeacher(scanner);
+                    break;
+                case 2:
+                    changesGraduationTeacher(scanner);
+                    break;
                 default:
                     System.out.println("Opção inválida.");
             }
         } while (option != 0);
     }
 
+    private static void changesNameTeacher(BufferedReader scanner) throws Exception {
+        int option;
+
+        System.out.println("Escolha um professor:");
+        for (int i = 0; i < teachersNum; i++) {
+            System.out.printf("%-5d - %-15d %-35s %-25s", (i + 1), teachers[i].getIdentification(), teachers[i].getName(), teachers[i].getGraduation());
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > teachersNum);
+
+        Teacher teacher = teachers[option - 1];
+
+        System.out.print("Digite o nome que deseja: ");
+        String name = scanner.readLine();
+
+        teacher.setName(name);
+        System.out.println("Nome do professor alterado com sucesso!");
+    }
+
+    private static void changesGraduationTeacher(BufferedReader scanner) throws Exception {
+        int option;
+
+        System.out.println("Escolha um professor:");
+        for (int i = 0; i < teachersNum; i++) {
+            System.out.printf("%-5d - %-15d %-35s %-25s", (i + 1), teachers[i].getIdentification(), teachers[i].getName(), teachers[i].getGraduation());
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > teachersNum);
+
+        Teacher teacher = teachers[option - 1];
+
+        System.out.print("Digite a graduação que deseja: ");
+        String graduation = scanner.readLine();
+
+        teacher.setGraduation(graduation);
+        System.out.println("Graduação do professor alterado com sucesso!");
+    }
+
     private static void changesStudent(BufferedReader scanner) throws Exception {
+        if (studentNum == 0) {
+            System.out.println("Nenhuma estudante registrado.");
+            return;
+        }
+
         int option;
 
         do {
@@ -582,11 +648,10 @@ public class App {
             System.out.println("Sistema Acadêmico - Alterações - Aluno");
             System.out.println(" ");
             System.out.println("0 - Voltar ao menu principal");
-            System.out.println("1 - Alterar mátricula do aluno");
-            System.out.println("2 - Alterar nome do aluno");
-            System.out.println("3 - Alterar idade do aluno");
-            System.out.println("4 - Alterar curso do aluno");
-            System.out.println("5 - Alterar semestre do aluno");
+            System.out.println("1 - Alterar nome do aluno");
+            System.out.println("2 - Alterar idade do aluno");
+            System.out.println("3 - Alterar curso do aluno");
+            System.out.println("4 - Alterar semestre do aluno");
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
@@ -596,13 +661,134 @@ public class App {
                 case 0:
                     System.out.println("Você voltou com sucesso.");
                     break;
+                case 1:
+                    changesNameStudent(scanner);
+                    break;
+                case 2:
+                    changesAgeStudent(scanner);
+                    break;
+                case 3:
+                    changesCourseStudent(scanner);
+                    break;
+                case 4:
+                    changesSemesterStudent(scanner);
+                    break;
                 default:
                     System.out.println("Opção inválida.");
             }
         } while (option != 0);
     }
 
+    private static void changesNameStudent(BufferedReader scanner) throws Exception {
+        int option;
+
+        System.out.println("Escolha um aluno:");
+        for (int i = 0; i < studentNum; i++) {
+            System.out.printf("%-5d - %-15d %-30s %-10s %-35s %-15s%n", (i + 1), students[i].getIdentification(), students[i].getName(), students[i].getAge() + " Anos", students[i].getCourse().getName(), students[i].getSemester() + " Semestres");
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > studentNum);
+
+        Student student = students[option - 1];
+
+        System.out.println("Digite o nome que deseja: ");
+        String name = scanner.readLine();
+
+        student.setName(name);
+        System.out.println("Nome do aluno alterado com sucesso!");
+    }
+
+    private static void changesAgeStudent(BufferedReader scanner) throws Exception {
+        int option;
+
+        System.out.println("Escolha um aluno:");
+        for (int i = 0; i < studentNum; i++) {
+            System.out.printf("%-5d - %-15d %-30s %-10s %-35s %-15s%n", (i + 1), students[i].getIdentification(), students[i].getName(), students[i].getAge() + " Anos", students[i].getCourse().getName(), students[i].getSemester() + " Semestres");
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > studentNum);
+
+        Student student = students[option - 1];
+
+        System.out.print("Digite a idade que deseja: ");
+        int age = Integer.parseInt(scanner.readLine());
+
+        student.setAge(age);
+        System.out.println("Idade do aluno alterada com sucesso!");
+    }
+
+    private static void changesCourseStudent(BufferedReader scanner) throws Exception {
+        int option;
+
+        System.out.println("Escolha um aluno:");
+        for (int i = 0; i < studentNum; i++) {
+            System.out.printf("%-5d - %-15d %-30s %-10s %-35s %-15s%n", (i + 1), students[i].getIdentification(), students[i].getName(), students[i].getAge() + " Anos", students[i].getCourse().getName(), students[i].getSemester() + " Semestres");
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > studentNum);
+
+        Student student = students[option - 1];
+
+        int[] idx = new int[courses.length];
+        int count = 0;
+
+        System.out.println("Escolha o curso:");
+        for (int i = 0; i < courses.length; i++) {
+            if (student.getCourse().getCode() != courses[i].getCode()) {
+                idx[count] = i;
+                System.out.printf("%-5d - %-15d %-35s %-15s %-15s%n", (count + 1), courses[i].getCode(), courses[i].getName(), courses[i].getDuration() + " Semestres", courses[i].getTotalSubjects() + " Matérias");
+                count++;
+            }
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > count);
+
+        Course selectedCourse = courses[idx[option - 1]];
+
+        student.setCourse(selectedCourse);
+        System.out.println("Curso do aluno alterado com sucesso!");
+    }
+
+    private static void changesSemesterStudent(BufferedReader scanner) throws Exception {
+        int option;
+
+        System.out.println("Escolha um aluno:");
+        for (int i = 0; i < studentNum; i++) {
+            System.out.printf("%-5d - %-15d %-30s %-10s %-35s %-15s%n", (i + 1), students[i].getIdentification(), students[i].getName(), students[i].getAge() + " Anos", students[i].getCourse().getName(), students[i].getSemester() + " Semestres");
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > studentNum);
+
+        Student student = students[option - 1];
+
+        System.out.print("Digite o semestres: ");
+        int semester = Integer.parseInt(scanner.readLine());
+
+        student.setSemester(semester);
+        System.out.println("Semestre do aluno alterado com sucesso!");
+    }
+
     private static void changesClass(BufferedReader scanner) throws Exception {
+        if (classesNum == 0) {
+            System.out.println("Nenhuma turma registrada!");
+            return;
+        }
+
         int option;
 
         do {
@@ -610,11 +796,10 @@ public class App {
             System.out.println("Sistema Acadêmico - Alterações - Turma");
             System.out.println(" ");
             System.out.println("0 - Voltar ao menu principal");
-            System.out.println("1 - Alterar mátricula da turma");
-            System.out.println("2 - Alterar nome da turma");
-            System.out.println("3 - Alterar professor da turma");
-            System.out.println("4 - Alterar alunos da turma");
-            System.out.println("5 - Alterar matéria da turma");
+            System.out.println("1 - Alterar número da turma");
+            System.out.println("2 - Alterar professor da turma");
+            System.out.println("3 - Alterar alunos da turma");
+            System.out.println("4 - Alterar matéria da turma");
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
@@ -623,6 +808,18 @@ public class App {
             switch (option) {
                 case 0:
                     System.out.println("Você voltou com sucesso.");
+                    break;
+                case 1:
+                    changesNumberClass(scanner);
+                    break;
+                case 2:
+                    changesTeacherClass(scanner);
+                    break;
+                case 3:
+                    changesStudentClass(scanner);
+                    break;
+                case 4:
+                    changesSubjectClass(scanner);
                     break;
                 default:
                     System.out.println("Opção inválida.");
@@ -630,32 +827,229 @@ public class App {
         } while (option != 0);
     }
 
+    private static void changesNumberClass(BufferedReader scanner) throws Exception {
+        int option;
+
+        System.out.println("Escolha uma turma: ");
+        for (int i = 0; i < classesNum; i++) {
+            System.out.println((i + 1) + " - " + classes[i].getName());
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > classesNum);
+
+        Class selectedClass = classes[option - 1];
+
+        System.out.print("Digite o número da turma: ");
+        int num = Integer.parseInt(scanner.readLine());
+
+        selectedClass.setName("Turma " + num);
+        System.out.println("Número da turma alterado com sucesso!");
+    }
+
+    private static void changesTeacherClass(BufferedReader scanner) throws Exception {
+        if (teachersNum == 0) {
+            System.out.println("Nenhum professor registrado.");
+            return;
+        }
+
+        int option;
+
+        System.out.println("Escolha uma turma:");
+        for (int i = 0; i < classesNum; i++) {
+            System.out.println((i + 1) + " - " + classes[i].getName());
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > classesNum);
+
+        Class selectedClass = classes[option - 1];
+
+        int[] idx = new int[teachersNum];
+        int count = 0;
+
+        System.out.println("Escolha um professor:");
+        for (int i = 0; i < teachersNum; i++) {
+            if (selectedClass.getTeacher().getIdentification() != teachers[i].getIdentification()) {
+                idx[count] = i;
+                System.out.println((count + 1) + " - " + teachers[i].getName());
+                count++;
+            }
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > count);
+
+        Teacher teacher = teachers[idx[option - 1]];
+
+        System.out.println("Professor da turma alterado com sucesso!");
+        selectedClass.setTeacher(teacher);
+    }
+
+    private static void changesStudentClass(BufferedReader scanner) throws Exception {
+        if (studentNum == 0) {
+            System.out.println("Nenhum aluno registrado!");
+            return;
+        }
+
+        int option;
+
+        System.out.println("Escolha uma turma:");
+        for (int i = 0; i < classesNum; i++) {
+            System.out.println((i + 1) + " - " + classes[i].getName());
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > classesNum);
+
+        Class selectedClass = classes[option - 1];
+
+        if (selectedClass.getStudentsNum() == 0) {
+            System.out.println("Essa turma não possui nenhum aluno!");
+            return;
+        }
+
+        int optionStudent;
+
+        System.out.println("Escolha um aluno para alterar:");
+        for (int i = 0; i < selectedClass.getStudentsNum(); i++) {
+            System.out.printf("%-5d - %-15d %-35s%n", (i + 1), selectedClass.getStudents()[i].getIdentification(), selectedClass.getStudents()[i].getName());
+        }
+
+        do {
+            System.out.print("Opção: ");
+            optionStudent = Integer.parseInt(scanner.readLine());
+        } while (optionStudent < 1 || optionStudent > selectedClass.getStudentsNum());
+
+        int[] idx = new int[studentNum];
+        int count = 0;
+
+        System.out.println("Escolha um aluno para colocar no lugar:");
+        for (int i = 0; i < studentNum; i++) {
+            boolean exists = false;
+            for (int j = 0; j < selectedClass.getStudentsNum(); j++) {
+                if (students[i].getIdentification() == selectedClass.getStudents()[j].getIdentification()) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists) {
+                idx[count] = i;
+                System.out.printf("%-5d - %-15d %-35s%n", (count + 1), students[i].getIdentification(), students[i].getName());
+                count++;
+            }
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > count);
+
+        Student student = students[idx[option - 1]];
+
+        selectedClass.getStudents()[optionStudent - 1] = student;
+        System.out.println("Você alterou o aluno com sucesso!");
+    }
+
+    private static void changesSubjectClass(BufferedReader scanner) throws Exception {
+        int option;
+
+        System.out.println("Escolher a turma:");
+        for (int i = 0; i < classesNum; i++) {
+            System.out.println((i + 1) + " - " + classes[i].getName());
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > classesNum);
+
+        Class selectedClass = classes[option - 1];
+
+        int[] idx = new int[subjects.length];
+        int count = 0;
+
+        System.out.println("Escolha a matéria:");
+        for (int i = 0; i < subjects.length; i++) {
+            if (subjects[i].getCode() != selectedClass.getSubject().getCode()) {
+                idx[count] = i;
+                System.out.printf("%-5d - %-10d %-35s %-10s", (count + 1), subjects[i].getCode(), subjects[i].getName(), subjects[i].getWorkload() + " Horas");
+                count++;
+            }
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > count);
+
+        Subject subject = subjects[idx[option - 1]];
+
+        selectedClass.setSubject(subject);
+        System.out.println("Matéria alterada com sucesso!");
+    }
+
     private static void changesGrade(BufferedReader scanner) throws Exception {
+        if (gradeNum == 0) {
+            System.out.println("Nenhuma nota foi registrada ainda!");
+            return;
+        }
+
         int option;
 
         do {
-            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-            System.out.println("Sistema Acadêmico - Alterações - Aluno");
-            System.out.println(" ");
-            System.out.println("0 - Voltar ao menu principal");
-            System.out.println("1 - Alterar mátricula do aluno");
-            System.out.println("2 - Alterar nome do aluno");
-            System.out.println("3 - Alterar idade do aluno");
-            System.out.println("4 - Alterar curso do aluno");
-            System.out.println("5 - Alterar semestre do aluno");
-            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-            System.out.printf("Escolha uma opção: ");
-
-            option = Integer.parseInt(scanner.readLine());
-
-            switch (option) {
-                case 0:
-                    System.out.println("Você voltou com sucesso.");
-                    break;
-                default:
-                    System.out.println("Opção inválida.");
+            System.out.println("Escolha um aluno para alterar as notas: ");
+            for (int i = 0; i < studentNum; i++) {
+                System.out.printf("%-2d - %-35s %-30s", (i + 1), students[i].getName(), students[i].getCourse().getName());
             }
-        } while (option != 0);
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > studentNum);
+
+        Student student = students[option - 1];
+
+        int[] idx = new int[gradeNum];
+        int count = 0;
+
+        System.out.println("Escolha uma nota de " + student.getName() + " para alterar: ");
+        for (int i = 0; i < gradeNum; i++) {
+            if (grades[i].getStudent().getIdentification() == student.getIdentification()) {
+                idx[count] = i;
+                System.out.printf("%-2d - %-35s Peso: %-5.2f Nota: %-5.2f", (count + 1), grades[i].getAssessment().getDescription(), (grades[i].getAssessment().getWeight() * 10), grades[i].getValue());
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            System.out.println(student.getName() + " não possui nenhuma nota!");
+            return;
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > count);
+
+        Grade grade = grades[idx[option - 1]];
+
+        double value;
+
+        do {
+            System.out.print("Digite a nova nota: ");
+            value = Double.parseDouble(scanner.readLine());
+        } while (value < 0 || value > 10);
+
+        System.out.printf("Nota alterada com sucesso para: %.2f", value);
+        grade.setValue(value);
     }
 
     /*
@@ -724,7 +1118,7 @@ public class App {
         }
 
         System.out.println("Informações dos professores:");
-        System.out.printf("%-15s %-35s %-20s%n", "Mátricula", "Professor", "Graduação do professor");
+        System.out.printf("%-15s %-35s %-20s%n", "Mátricula", "Professor", "Graduação");
 
         for (int i = 0; i < teachersNum; i++) {
             System.out.printf("%-15d %-25s %-20s%n", teachers[i].getIdentification(), teachers[i].getName(), teachers[i].getGraduation());
@@ -856,7 +1250,7 @@ public class App {
         System.out.printf("%-15s %-25s %-15s %-10s%n", "Identificação", "Curso", "Duração", "Matérias");
 
         for (int i = 0; i < courses.length; i++) {
-            System.out.printf("%-15d %-25s %-15d %-10d%n", courses[i].getCode(), courses[i].getName(), courses[i].getDuration(), courses[i].getTotalSubjects());
+            System.out.printf("%-15d %-25s %-15s %-10d%n", courses[i].getCode(), courses[i].getName(), courses[i].getDuration() + " Semestres", courses[i].getTotalSubjects());
         }
     }
 
@@ -865,7 +1259,7 @@ public class App {
         System.out.printf("%-15s %-25s %-15s%n", "Identificação", "Matéria", "Carga Horária");
 
         for (int i = 0; i < subjects.length; i++) {
-            System.out.printf("%-15d %-25s %-15d%n", subjects[i].getCode(), subjects[i].getName(), subjects[i].getWorkload());
+            System.out.printf("%-15d %-25s %-15s%n", subjects[i].getCode(), subjects[i].getName(), subjects[i].getWorkload() + " Horas");
         }
     }
 
@@ -903,6 +1297,8 @@ public class App {
             System.out.println("Sistema Acadêmico - Rankings");
             System.out.println(" ");
             System.out.println("0 - Voltar ao menu principal");
+            System.out.println("1 - Ranking de maiores/menores notas");
+            System.out.println("2 - Ranking de médias por aluno");
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
@@ -912,10 +1308,315 @@ public class App {
                 case 0:
                     System.out.println("Você voltou com sucesso.");
                     break;
+                case 1:
+                    rankingGrades(scanner);
+                    break;
+                case 2:
+                    rankingStudents(scanner);
+                    break;
                 default:
                     System.out.println("Opção inválida.");
             }
         } while (option != 0);
+    }
+
+    private static void rankingGrades(BufferedReader scanner) throws Exception {
+        if (gradeNum == 0) {
+            System.out.println("Nenhuma nota foi registrada!");
+            return;
+        }
+
+        int option;
+
+        do {
+            System.out.println("Você deseja ordenar como o Ranking?");
+            System.out.println("1 - Maiores notas até menores");
+            System.out.println("2 - Menores notas até maiores");
+            System.out.print("Opção: ");
+
+            option = Integer.parseInt(scanner.readLine());
+
+            switch (option) {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } while (option != 1 && option != 2);
+
+        Grade[] sorted = new Grade[gradeNum];
+
+        for (int i = 0; i < gradeNum; i++) sorted[i] = grades[i];
+
+        /*
+            Adicionado Bubble Sort, estudado em aula e retirado dos slides da professora.
+         */
+        for (int i = 0; i < gradeNum; i++) {
+            for (int j = 0; j < gradeNum; j++) {
+                boolean swap = (option == 1) ? sorted[j].getValue() < sorted[j + 1].getValue() : sorted[j].getValue() > sorted[j + 1].getValue();
+                if (swap) {
+                    Grade tmp = sorted[j];
+                    sorted[j] = sorted[j + 1];
+                    sorted[j + 1] = tmp;
+                }
+            }
+        }
+
+        System.out.printf("%-10s %-25s %-35s %-20s %-6s%n", "Posição", "Aluno", "Matéria", "Avaliação", "Nota");
+        for (int i = 0; i < gradeNum; i++) {
+            System.out.printf("%-8d - %-25s %-35s %-20s %-6.2f%n", (i + 1), sorted[i].getStudent().getName(), sorted[i].getAssessment().getSubject().getName(), sorted[i].getAssessment().getDescription(), sorted[i].getValue());
+        }
+    }
+
+    private static void rankingStudents(BufferedReader scanner) throws Exception {
+        if (studentNum == 0) {
+            System.out.println("Nenhum estudante foi registrado!");
+            return;
+        }
+
+        int option;
+
+        do {
+            System.out.println("Você deseja ordenar como o Ranking de média dos alunos?");
+            System.out.println("1 - Maior média para a menor");
+            System.out.println("2 - Menor média para a maior");
+            System.out.print("Opção: ");
+
+            option = Integer.parseInt(scanner.readLine());
+
+            switch (option) {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (option != 1 && option != 2);
+
+        double[] averages = new double[studentNum];
+        for (int i = 0; i < studentNum; i++) {
+            double sum = 0.0;
+            int count = 0;
+            for (int j = 0; j < gradeNum; j++) {
+                if (grades[j].getStudent().getIdentification() == students[i].getIdentification()) {
+                    sum += grades[j].getValue();
+                    count++;
+                }
+            }
+            averages[i] = (count > 0) ? sum / count : -1;
+        }
+
+        int[] idx = new int[studentNum];
+        for (int i = 0; i < studentNum; i++) idx[i] = i;
+
+        for (int i = 0; i < studentNum; i++) {
+            for (int j = 0; j < studentNum; j++) {
+                boolean swap = (option == 1) ? averages[idx[j]] < averages[idx[j + 1]] : averages[idx[j]] > averages[idx[j + 1]];
+                if (swap) {
+                    int tmp = idx[j];
+                    idx[j] = idx[j + 1];
+                    idx[j + 1] = tmp;
+                }
+            }
+        }
+
+        System.out.printf("%-10s %-25s %-20s %-8s%n", "Posição", "Aluno", "Curso", "Média");
+
+        for (int i = 0; i < studentNum; i++) {
+            Student student = students[idx[i]];
+            if (averages[idx[i]] >= 0) {
+                System.out.printf("%-8d - %-25s %-20s %-8.2f%n", (i + 1), student.getName(), student.getCourse().getName(), averages[idx[i]]);
+            } else {
+                System.out.printf("%-8d - %-25s %-20s %-8s%n", (i + 1), student.getName(), student.getCourse().getName(), "Sem notas");
+            }
+        }
+    }
+
+    /*
+        Menu de médias de alunos, turma, matérias, cursos e geral.
+     */
+    private static void averages(BufferedReader scanner) throws Exception {
+        int option;
+
+        do {
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.println("Sistema Acadêmico - Médias");
+            System.out.println(" ");
+            System.out.println("0 - Voltar ao menu principal");
+            System.out.println("1 - Média dos alunos por turma/matéria");
+            System.out.println("2 - Média das turmas por matéria");
+            System.out.println("3 - Média do curso");
+            System.out.println("4 - Média de uma matéria");
+            System.out.println("5 - Média geral de tudo");
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.printf("Escolha uma opção: ");
+
+            option = Integer.parseInt(scanner.readLine());
+
+            switch (option) {
+                case 0:
+                    System.out.println("Você voltou com sucesso!");
+                    break;
+                case 1:
+                    averageClassBySubject();
+                    break;
+                case 2:
+                    averageStudentBySubject(scanner);
+                    break;
+                case 3:
+                    averageCourse(scanner);
+                    break;
+                case 4:
+                    averageSubject(scanner);
+                    break;
+                case 5:
+                    averageGeneral();
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } while (option != 0);
+    }
+
+    private static void averageClassBySubject() {
+        if (classesNum == 0) {
+            System.out.println("Nenhuma turma registrada!");
+            return;
+        }
+
+        System.out.printf("%-10s %-35s %-8s%n", "Turma", "Matéria", "Média");
+
+        for (int i = 0; i < classesNum; i++) {
+            double sum = 0;
+            int count = 0;
+            for (int j = 0; j < gradeNum; j++) {
+                if (grades[j].getAssessment().getSubject() == classes[i].getSubject()) {
+                    for (int k = 0; k < classes[i].getStudentsNum(); k++) {
+                        if (grades[j].getStudent().getIdentification() == classes[i].getStudents()[k].getIdentification()) {
+                            sum += grades[j].getValue();
+                            count++;
+                            break;
+                        }
+                    }
+                }
+            }
+            String average = (count > 0) ? String.format("%.2f", sum / count) : "Sem notas";
+            System.out.printf("%-10s %-35s %-8s%n", classes[i].getName(), classes[i].getSubject().getName(), average);
+        }
+    }
+
+    private static void averageStudentBySubject(BufferedReader scanner) throws Exception {
+        if (studentNum == 0) {
+            System.out.println("Nenhum aluno registrado!");
+            return;
+        }
+
+        int option;
+        do {
+            System.out.println("Escolha um aluno:");
+            for (int i = 0; i < studentNum; i++) System.out.println((i + 1) + " - " + students[i].getName());
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > studentNum);
+
+        Student student = students[option - 1];
+
+        System.out.println("Médias de " + student.getName() + " por matéria:");
+        System.out.printf("%-35s %-10s %-8s%n", "Matéria", "Turma", "Média");
+
+        for (int i = 0; i < classesNum; i++) {
+            boolean inClass = false;
+            for (int j = 0; j < classes[i].getStudentsNum(); j++) {
+                if (classes[i].getStudents()[j].getIdentification() == student.getIdentification()) {
+                    inClass = true;
+                    break;
+                }
+            }
+            if (!inClass) continue;
+
+            double sum = 0;
+            int count = 0;
+            for (int k = 0; k < gradeNum; k++) {
+                if (grades[k].getStudent().getIdentification() == student.getIdentification() && grades[k].getAssessment().getSubject() == classes[i].getSubject()) {
+                    sum += grades[k].getValue();
+                    count++;
+                }
+            }
+
+            String average = (count > 0) ? String.format("%.2f", sum / count) : "Sem notas";
+            System.out.printf("%-35s %-10s %-8s%n", classes[i].getSubject().getName(), classes[i].getName(), average);
+        }
+    }
+
+    private static void averageCourse(BufferedReader scanner) throws Exception {
+        int option;
+        do {
+            System.out.println("Escolha o curso:");
+            for (int i = 0; i < courses.length; i++) System.out.println((i + 1) + " - " + courses[i].getName());
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > courses.length);
+
+        Course course = courses[option - 1];
+
+        double sum = 0;
+        int count = 0;
+        for (int i = 0; i < gradeNum; i++) {
+            if (grades[i].getStudent().getCourse().getCode() == course.getCode()) {
+                sum += grades[i].getValue();
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            System.out.println("Nenhuma nota registrada nesse curso.");
+            return;
+        }
+
+        System.out.printf("Média geral do curso %s: %.2f", course.getName(), (sum/count));
+    }
+
+    private static void averageSubject(BufferedReader scanner) throws Exception {
+        int option;
+        do {
+            System.out.println("Escolha a matéria:");
+            for (int i = 0; i < assessments.length; i++) System.out.println((i + 1) + " - " + assessments[i].getDescription());
+            System.out.print("Opções: ");
+            option = Integer.parseInt(scanner.readLine());
+        } while (option < 1 || option > assessments.length);
+
+        Subject subject = subjects[option - 1];
+
+        double sum = 0;
+        int count = 0;
+        for (int i = 0; i < gradeNum; i++) {
+            if (grades[i].getAssessment().getSubject() == subject) {
+                sum += grades[i].getValue();
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            System.out.println("Nenhuma nota registrada nessa turma!");
+            return;
+        }
+
+        System.out.printf("Média da matéria %s: %.2f", subject.getName(), (sum/count));
+    }
+
+    private static void averageGeneral() {
+        if (gradeNum == 0) {
+            System.out.println("Nenhuma nota registrada.");
+            return;
+        }
+
+        double sum = 0;
+        for (int i = 0; i < gradeNum; i++) sum += grades[i].getValue();
+
+        System.out.printf("Média geral de todas as notas: %.2f", (sum/gradeNum));
     }
 
     /*
@@ -943,10 +1644,105 @@ public class App {
                 case 0:
                     System.out.println("Você voltou com sucesso.");
                     break;
+                case 1:
+                    searchTeacher(scanner);
+                    break;
+                case 2:
+                    searchStudent(scanner);
+                    break;
+                case 3:
+                    searchClass(scanner);
+                    break;
+                case 4:
+                    searchCourse(scanner);
+                    break;
+                case 5:
+                    searchSubject(scanner);
+                    break;
                 default:
                     System.out.println("Opção inválida.");
             }
         } while (option != 0);
+    }
+
+    private static void searchTeacher(BufferedReader scanner) throws Exception {
+        System.out.print("Digite o nome do professor: ");
+        String name = scanner.readLine().toLowerCase();
+
+        boolean found = false;
+        System.out.printf("%-15s %-35s %-20s%n", "Mátricula", "Nome", "Graduação");
+        for (int i = 0; i < teachersNum; i++) {
+            if (teachers[i].getName().toLowerCase().contains(name)) {
+                System.out.printf("%-15d %-35s %-20s%n", teachers[i].getIdentification(), teachers[i].getName(), teachers[i].getGraduation());
+                found = true;
+            }
+        }
+
+        if (!found) System.out.println("Nenhum professor com esse nome encontrado!");
+    }
+
+    private static void searchStudent(BufferedReader scanner) throws Exception {
+        System.out.print("Digite o nome do aluno: ");
+        String name = scanner.readLine().toLowerCase();
+
+        boolean found = false;
+        System.out.printf("%-15s %-35s %-10s %-35s %-10s%n", "Mátricula", "Aluno", "Idade", "Curso", "Semestre");
+        for (int i = 0; i < studentNum; i++) {
+            if (students[i].getName().toLowerCase().contains(name)) {
+                System.out.printf("%-15d %-35s %-10d %-35s %-10d%n", students[i].getIdentification(), students[i].getName(), students[i].getAge(), students[i].getCourse().getName(), students[i].getSemester());
+                found = true;
+            }
+        }
+
+        if (!found) System.out.println("Nenhum aluno com esse nome encontrado!");
+    }
+
+    private static void searchClass(BufferedReader scanner) throws Exception {
+        System.out.print("Digite o número da turma (Ex.: 30): ");
+        String name = "turma " + scanner.readLine().toLowerCase();
+
+        boolean found = false;
+        System.out.printf("%-15s %-15s %-35s %-10s %-35s%n", "Identificação", "Turma", "Professor", "Alunos", "Matéria");
+        for (int i = 0; i < classesNum; i++) {
+            if (classes[i].getName().toLowerCase().contains(name)) {
+                System.out.printf("%-15d %-15s %-35s %-10d %-35s%n", classes[i].getNumber(), classes[i].getName(), classes[i].getTeacher().getName(), classes[i].getStudentsNum(), classes[i].getSubject().getName());
+                found = true;
+            }
+        }
+
+        if (!found) System.out.println("Nenhuma turma encontrada!");
+    }
+
+    private static void searchCourse(BufferedReader scanner) throws Exception {
+        System.out.print("Digite o nome do curso: ");
+        String name = scanner.readLine().toLowerCase();
+
+        boolean found = false;
+        System.out.printf("%-15s %-30s %-15s %-10s%n", "Identificação", "Curso", "Duração", "Matérias");
+        for (int i = 0; i < courses.length; i++) {
+            if (courses[i].getName().toLowerCase().contains(name)) {
+                System.out.printf("%-15d %-30s %-15s %-10d%n", courses[i].getCode(), courses[i].getName(), courses[i].getDuration() + " Semestres", courses[i].getTotalSubjects());
+                found = true;
+            }
+        }
+
+        if (!found) System.out.println("Nenhum curso encontrado!");
+    }
+
+    private static void searchSubject(BufferedReader scanner) throws Exception {
+        System.out.println("Digite o nome da matéria: ");
+        String name = scanner.readLine().toLowerCase();
+
+        boolean found = false;
+        System.out.printf("%-15s %-35s %-20s%n", "Identificação", "Matéria", "Carga Horária");
+        for (int i = 0; i < subjects.length; i++) {
+            if (subjects[i].getName().toLowerCase().contains(name)) {
+                System.out.printf("%-15d %-35s %-20s", subjects[i].getCode(), subjects[i].getName(), subjects[i].getWorkload() + " Horas");
+                found = true;
+            }
+        }
+
+        if (!found) System.out.println("Nenhuma matéria encontrada!");
     }
 
     /*
