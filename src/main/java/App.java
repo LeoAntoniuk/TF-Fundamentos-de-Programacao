@@ -266,186 +266,272 @@ public class App {
         com validações para aqueles que dependem um do outro.
      */
     private static void registerTeacher(BufferedReader scanner) throws Exception {
-        if (teachersNum < MAX_TEACHERS) {
-            //Classe Random e utilização pesquisada no Google
-            int numTeacher = generateId();
-
-            String name, graduation;
-
-            System.out.print("Digite o nome do professor: ");
-            name = scanner.readLine();
-
-            System.out.print("Digite a graduação do professor: ");
-            graduation = scanner.readLine();
-
-            teachers[teachersNum] = new Teacher(numTeacher, name, graduation);
-
-            teachersNum++;
-        } else {
+        if (teachersNum == MAX_TEACHERS) {
             System.out.println("Você atingiu o limite de professores registrados!");
+            return;
         }
+
+        if (idNum == MAX_ID_GENERATE) {
+            System.out.println("Você atingiu o limite de Identificadores que podem ser criados!");
+            return;
+        }
+
+        //Classe Random e utilização pesquisada no Google
+        int numTeacher = generateId();
+
+        String name, graduation;
+
+        do {
+            System.out.print("Digite o nome do professor: ");
+            name = scanner.readLine().trim();
+
+            if (name.isEmpty()) {
+                System.out.println("O nome não pode ser vazio!");
+            }
+        } while (name.isEmpty());
+
+
+        do {
+            System.out.print("Digite a graduação do professor: ");
+            graduation = scanner.readLine().trim();
+
+            if (graduation.isEmpty()) {
+                System.out.println("A graduação não pode ser vazia!");
+            }
+        } while (graduation.isEmpty());
+
+        teachers[teachersNum] = new Teacher(numTeacher, name, graduation);
+
+        teachersNum++;
     }
 
     private static void registerClass(BufferedReader scanner) throws Exception {
-        if (classesNum < MAX_CLASSES) {
-            int numClass = generateId(), numberClass, option;
+        if (classesNum == MAX_CLASSES) {
+            System.out.println("Você atingiu o limite de turmas registradas!");
+            return;
+        }
 
-            String input;
+        if (idNum == MAX_ID_GENERATE) {
+            System.out.println("Você atingiu o limite de Identificadores que podem ser criados!");
+            return;
+        }
 
-            do {
-                System.out.printf("Digite o número da turma (Ex.: 30): ");
-                input = scanner.readLine();
-                //\d = numeros inteiros e + mais de um numero
-            } while (!input.matches("\\d+")); //matches estudado via https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match
+        int numClass = generateId(), numberClass, option;
 
-            numberClass = Integer.parseInt(input);
-            String className = "Turma " + numberClass;
+        String input;
 
-            Teacher teacher;
+        do {
+            System.out.print("Digite o número da turma (Ex.: 30): ");
+            input = scanner.readLine();
+            //\d = numeros inteiros e + mais de um numero
 
-            if (teachersNum > 0) {
-                do {
-                    System.out.println("Escolha um professor para a turma.");
+            if (!input.matches("\\d+")) {
+                System.out.println("Apenas números.");
+            }
+        } while (!input.matches("\\d+")); //matches estudado via https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match
 
-                    for (int i = 0; i < teachersNum; i++) {
-                        System.out.println((i + 1) + " - " + teachers[i].getName());
-                    }
+        numberClass = Integer.parseInt(input);
+        String className = "Turma " + numberClass;
 
-                    System.out.print("Opção: ");
-                    option = Integer.parseInt(scanner.readLine());
-                } while (option > teachersNum);
-
-                teacher = teachers[option - 1];
-            } else {
-                System.out.println("Você não possui professores registrados!");
+        for (int i = 0; i < classesNum; i++) {
+            if (className.equalsIgnoreCase(classes[i].getName())) {
+                System.out.println("Essa turma já existe!");
                 return;
             }
-
-            do {
-                System.out.println("Escolha uma matéria para aderir à turma.");
-                for (int i = 0; i < subjects.length; i++) {
-                    System.out.println((i + 1) + " - " + subjects[i].getName());
-                }
-
-                System.out.print("Opção: ");
-                option = Integer.parseInt(scanner.readLine());
-            } while (option < 1 || option > subjects.length);
-
-            Subject subject = subjects[option - 1];
-
-            classes[classesNum] = new Class(numClass, className, teacher, subject);
-
-            classesNum++;
-        } else {
-            System.out.println("Você atingiu o limite de turmas registradas!");
         }
+
+        if (teachersNum == 0) {
+            System.out.println("Você não possui professores registrados!");
+            return;
+        }
+
+        System.out.println("Escolha um professor para a turma.");
+
+        for (int i = 0; i < teachersNum; i++) {
+            System.out.println((i + 1) + " - " + teachers[i].getName());
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > teachersNum) {
+                System.out.println("Opção inválida.");
+            }
+        } while (option > teachersNum);
+
+        Teacher teacher = teachers[option - 1];
+
+        System.out.println("Escolha uma matéria para aderir à turma.");
+        for (int i = 0; i < subjects.length; i++) {
+            System.out.println((i + 1) + " - " + subjects[i].getName());
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > subjects.length) {
+                System.out.println("Opção inválida.");
+            }
+        } while (option < 1 || option > subjects.length);
+
+        Subject subject = subjects[option - 1];
+
+        classes[classesNum] = new Class(numClass, className, teacher, subject);
+
+        classesNum++;
     }
 
     private static void registerStudent(BufferedReader scanner) throws Exception {
-        if (studentNum < MAX_STUDENTS) {
-            int numStudent = generateId(), studentAge, option;
+        if (studentNum == MAX_STUDENTS) {
+            System.out.println("Você atingiu o limite de alunos registrados.");
+            return;
+        }
 
+        if (idNum == MAX_ID_GENERATE) {
+            System.out.println("Você atingiu o limite de Identificadores que podem ser criados!");
+            return;
+        }
+
+        int numStudent = generateId(), studentAge, option;
+
+        String studentName;
+
+        do {
             System.out.print("Digite o nome do estudante: ");
-            String studentName = scanner.readLine();
+            studentName = scanner.readLine().trim();
 
+            if (studentName.isEmpty()) {
+                System.out.println("O nome não pode ser vazio!");
+            }
+        } while (studentName.isEmpty());
+
+        do {
             System.out.print("Digite a idade do estudante: ");
             studentAge = Integer.parseInt(scanner.readLine());
 
-            do {
-                System.out.println("Escolha o curso do estudante.");
-                for (int i = 0; i < courses.length; i++) {
-                    System.out.println((i + 1) + " - " + courses[i].getName());
-                }
+            if (studentAge < 1 || studentAge > 120) {
+                System.out.println("Idade inválida.");
+            }
+        } while (studentAge < 1 || studentAge > 120);
 
-                System.out.print("Opção: ");
-                option = Integer.parseInt(scanner.readLine());
-            } while (option < 1 || option > courses.length);
-
-            Course course = courses[option - 1];
-
-            students[studentNum] = new Student(numStudent, studentName, studentAge, course);
-
-            studentNum++;
-        } else {
-            System.out.println("Você atingiu o limite de alunos registrados.");
+        System.out.println("Escolha o curso do estudante.");
+        for (int i = 0; i < courses.length; i++) {
+            System.out.println((i + 1) + " - " + courses[i].getName());
         }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > courses.length) {
+                System.out.println("Opção inválida.");
+            }
+        } while (option < 1 || option > courses.length);
+
+        Course course = courses[option - 1];
+
+        students[studentNum] = new Student(numStudent, studentName, studentAge, course);
+
+        studentNum++;
     }
 
     private static void registerGrade(BufferedReader scanner) throws Exception {
-        if (gradeNum < MAX_GRADES) {
-            int option;
-
-            Class classSelected;
-
-            if (classesNum > 0) {
-                do {
-                    System.out.println("Escolha a turma que deseja cadastrar a nota.");
-                    System.out.printf("%-10s %-25s %-35s %-6s%n", "Opção", "Turma", "Matéria", "Alunos");
-
-                    for (int i = 0; i < classesNum; i++) {
-                        System.out.printf("%-10d %-25s %-35s %-6d%n", (i + 1), classes[i].getName(), classes[i].getSubject().getName(), classes[i].getStudentsNum());
-                    }
-
-                    System.out.print("Opção: ");
-                    option = Integer.parseInt(scanner.readLine());
-                } while (option < 1 || option > classesNum);
-
-                classSelected = classes[option - 1];
-            } else {
-                System.out.println("Você não registrou nenhuma turma para adicionar nota!");
-                return;
-            }
-
-            Student student;
-
-            if (classSelected.getStudentsNum() > 0) {
-                do {
-                    System.out.println("Escolha qual aluno você deseja adicionar a nota.");
-                    System.out.printf("%-10s %-25s%n", "Opção", "Aluno");
-
-                    for (int i = 0; i < classSelected.getStudentsNum(); i++) {
-                        System.out.printf("%-10d %-25s%n", (i + 1), classSelected.getStudents()[i].getName());
-                    }
-
-                    System.out.print("Opção: ");
-                    option = Integer.parseInt(scanner.readLine());
-                } while (option < 1 || option > classSelected.getStudentsNum());
-
-                student = classSelected.getStudents()[option - 1];
-            } else {
-                System.out.println("Você não adicionou nenhum aluno nessa turma!");
-                return;
-            }
-
-            do {
-                System.out.println("Escolha qual avaliação você deseja cadastrar nota.");
-                System.out.printf("%-10s %-25s%n", "Opção", "Avaliação");
-
-                for (int i = 0; i < assessments.length; i++) {
-                    if (assessments[i].getSubject() == classSelected.getSubject()) {
-                        System.out.printf("%-10d %-25s%n", (i + 1), assessments[i].getDescription());
-                    }
-                }
-
-                System.out.printf("Opção: ");
-                option = Integer.parseInt(scanner.readLine());
-            } while (option < 1 || option > assessments.length);
-
-            Assessment assessment = assessments[option - 1];
-
-            double value;
-
-            do {
-                System.out.print("Qual o valor da nota: ");
-                value = Double.parseDouble(scanner.readLine());
-            } while (value < 0 || value > 10);
-
-            grades[gradeNum] = new Grade(student, assessment, value);
-
-            gradeNum++;
-        } else {
+        if (gradeNum == MAX_GRADES) {
             System.out.println("Você atingiu o limite de notas digitadas.");
+            return;
         }
+
+        if (classesNum == 0) {
+            System.out.println("Você não registrou nenhuma turma para adicionar nota!");
+            return;
+        }
+
+        int option;
+
+        System.out.println("Escolha a turma que deseja cadastrar a nota.");
+        System.out.printf("%-10s %-25s %-35s %-6s%n", "Opção", "Turma", "Matéria", "Alunos");
+
+        for (int i = 0; i < classesNum; i++) {
+            System.out.printf("%-10d %-25s %-35s %-6d%n", (i + 1), classes[i].getName(), classes[i].getSubject().getName(), classes[i].getStudentsNum());
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > classesNum) {
+                System.out.println("Opção inválida.");
+            }
+        } while (option < 1 || option > classesNum);
+
+        Class classSelected = classes[option - 1];
+
+        if (classSelected.getStudentsNum() == 0) {
+            System.out.println("Você não adicionou nenhum aluno nessa turma!");
+            return;
+        }
+
+        System.out.println("Escolha qual aluno você deseja adicionar a nota.");
+        System.out.printf("%-10s %-25s%n", "Opção", "Aluno");
+
+        for (int i = 0; i < classSelected.getStudentsNum(); i++) {
+            System.out.printf("%-10d %-25s%n", (i + 1), classSelected.getStudents()[i].getName());
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > classSelected.getStudentsNum()) {
+                System.out.println("Opção inválida.");
+            }
+        } while (option < 1 || option > classSelected.getStudentsNum());
+
+        Student student = classSelected.getStudents()[option - 1];
+
+        System.out.println("Escolha qual avaliação você deseja cadastrar nota.");
+        System.out.printf("%-10s %-25s%n", "Opção", "Avaliação");
+
+        for (int i = 0; i < assessments.length; i++) {
+            if (assessments[i].getSubject() == classSelected.getSubject()) {
+                System.out.printf("%-10d %-25s%n", (i + 1), assessments[i].getDescription());
+            }
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > assessments.length) {
+                System.out.println("Opção inválida.");
+            }
+        } while (option < 1 || option > assessments.length);
+
+        Assessment assessment = assessments[option - 1];
+
+        for (int i  = 0; i < gradeNum; i++) {
+            if (grades[i].getStudent().getIdentification() == student.getIdentification() && grades[i].getAssessment() == assessment) {
+                System.out.println("Esse aluno já possui uma nota cadastrada nessa avaliação!");
+                return;
+            }
+        }
+
+        double value;
+
+        do {
+            System.out.print("Qual o valor da nota: ");
+            value = Double.parseDouble(scanner.readLine());
+
+            if (value < 0 || value > 10) {
+                System.out.println("Valor inválido.");
+            }
+        } while (value < 0 || value > 10);
+
+        grades[gradeNum] = new Grade(student, assessment, value);
+
+        gradeNum++;
     }
 
     /*
@@ -466,35 +552,53 @@ public class App {
 
         int count = 0, option, seccondCount = 0;
 
-        do {
-            for (int i = 0; i < classesNum; i++) {
-                if (classes[i].getStudentsNum() < classes[i].getStudents().length) {
-                    System.out.println((count + 1) + " - " + classes[i].getName());
-                    count++;
-                }
-            }
+        int[] idx = new int[classesNum];
 
+        for (int i = 0; i < classesNum; i++) {
+            if (classes[i].getStudentsNum() < classes[i].getStudents().length) {
+                idx[count] = i;
+                System.out.println((count + 1) + " - " + classes[i].getName());
+                count++;
+            }
+        }
+
+        do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > count) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > count);
 
-        Class classSelected = classes[option - 1];
+        Class classSelected = classes[idx[option - 1]];
 
         Student[] avaibleStudents = new Student[MAX_STUDENTS];
 
-        do {
-            for (int i = 0; i < studentNum; i++) {
-                for (int j = 0; j < classSelected.getStudentsNum(); j++) {
-                    if (students[i].getIdentification() != classSelected.getStudents()[j].getIdentification()) {
-                        avaibleStudents[seccondCount] = students[i];
-                        System.out.printf("%-10d - %-35s | %-25s%n", (seccondCount + 1), students[i].getName(), students[i].getCourse().getName());
-                        seccondCount++;
-                    }
+        System.out.println("Escolha qual aluno deseja adicionar à turma:");
+        for (int i = 0; i < studentNum; i++) {
+            boolean exists = false;
+            for (int j = 0; j < classSelected.getStudentsNum(); j++) {
+                if (students[i].getIdentification() == classSelected.getStudents()[j].getIdentification()) {
+                    exists = true;
+                    break;
                 }
             }
 
+            if (!exists) {
+                avaibleStudents[seccondCount] = students[i];
+                System.out.printf("%-10d - %-35s | %-25s%n", (seccondCount + 1), students[i].getName(), students[i].getCourse().getName());
+                seccondCount++;
+            }
+        }
+
+        do {
             System.out.printf("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > seccondCount) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > seccondCount);
 
         Student student = avaibleStudents[option - 1];
@@ -602,12 +706,24 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > teachersNum) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > teachersNum);
 
         Teacher teacher = teachers[option - 1];
 
-        System.out.print("Digite o nome que deseja: ");
-        String name = scanner.readLine();
+        String name;
+
+        do {
+            System.out.print("Digite o nome que deseja: ");
+            name = scanner.readLine().trim();
+
+            if (name.isEmpty()) {
+                System.out.println("O nome não pode ser vazio!");
+            }
+        } while (name.isEmpty());
 
         teacher.setName(name);
         System.out.println("Nome do professor alterado com sucesso!");
@@ -624,12 +740,24 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > teachersNum) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > teachersNum);
 
         Teacher teacher = teachers[option - 1];
 
-        System.out.print("Digite a graduação que deseja: ");
-        String graduation = scanner.readLine();
+        String graduation;
+
+        do {
+            System.out.print("Digite a graduação que deseja: ");
+            graduation = scanner.readLine().trim();
+
+            if (graduation.isEmpty()) {
+                System.out.println("A graduação não pode ser vazia!");
+            }
+        } while (graduation.isEmpty());
 
         teacher.setGraduation(graduation);
         System.out.println("Graduação do professor alterado com sucesso!");
@@ -690,12 +818,24 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > studentNum) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > studentNum);
 
         Student student = students[option - 1];
 
-        System.out.println("Digite o nome que deseja: ");
-        String name = scanner.readLine();
+        String name;
+
+        do {
+            System.out.println("Digite o nome que deseja: ");
+            name = scanner.readLine().trim();
+
+            if (name.isEmpty()) {
+                System.out.println("O nome não pode ser vazio!");
+            }
+        } while (name.isEmpty());
 
         student.setName(name);
         System.out.println("Nome do aluno alterado com sucesso!");
@@ -712,12 +852,24 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > studentNum) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > studentNum);
 
         Student student = students[option - 1];
 
-        System.out.print("Digite a idade que deseja: ");
-        int age = Integer.parseInt(scanner.readLine());
+        int age;
+
+        do {
+            System.out.print("Digite a idade que deseja: ");
+            age = Integer.parseInt(scanner.readLine());
+
+            if (age < 1 || age > 120) {
+                System.out.println("Idade inválida.");
+            }
+        } while (age < 1 || age > 120);
 
         student.setAge(age);
         System.out.println("Idade do aluno alterada com sucesso!");
@@ -734,6 +886,10 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > studentNum) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > studentNum);
 
         Student student = students[option - 1];
@@ -753,16 +909,25 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > count) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > count);
 
         Course selectedCourse = courses[idx[option - 1]];
 
         student.setCourse(selectedCourse);
+
+        if (student.getSemester() > selectedCourse.getDuration()) {
+            student.setSemester(selectedCourse.getDuration());
+        }
+
         System.out.println("Curso do aluno alterado com sucesso!");
     }
 
     private static void changesSemesterStudent(BufferedReader scanner) throws Exception {
-        int option;
+        int option, semester;
 
         System.out.println("Escolha um aluno:");
         for (int i = 0; i < studentNum; i++) {
@@ -772,12 +937,22 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > studentNum) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > studentNum);
 
         Student student = students[option - 1];
 
-        System.out.print("Digite o semestres: ");
-        int semester = Integer.parseInt(scanner.readLine());
+        do {
+            System.out.print("Digite o semestres: ");
+            semester = Integer.parseInt(scanner.readLine());
+
+            if (semester < 1 || semester > student.getCourse().getDuration()) {
+                System.out.println("Semestre inválido.");
+            }
+        } while (semester < 1 || semester > student.getCourse().getDuration());
 
         student.setSemester(semester);
         System.out.println("Semestre do aluno alterado com sucesso!");
@@ -828,7 +1003,7 @@ public class App {
     }
 
     private static void changesNumberClass(BufferedReader scanner) throws Exception {
-        int option;
+        int option, num;
 
         System.out.println("Escolha uma turma: ");
         for (int i = 0; i < classesNum; i++) {
@@ -838,12 +1013,22 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > classesNum) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > classesNum);
 
         Class selectedClass = classes[option - 1];
 
-        System.out.print("Digite o número da turma: ");
-        int num = Integer.parseInt(scanner.readLine());
+        do {
+            System.out.print("Digite o número da turma: ");
+            num = Integer.parseInt(scanner.readLine());
+
+            if (num < 1 || num >= 1000) {
+                System.out.println("Coloque um número entre 1 e 999.");
+            }
+        } while (num < 1 || num >= 1000);
 
         selectedClass.setName("Turma " + num);
         System.out.println("Número da turma alterado com sucesso!");
@@ -865,6 +1050,10 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > classesNum) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > classesNum);
 
         Class selectedClass = classes[option - 1];
@@ -884,6 +1073,10 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > count) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > count);
 
         Teacher teacher = teachers[idx[option - 1]];
@@ -908,6 +1101,10 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > classesNum) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > classesNum);
 
         Class selectedClass = classes[option - 1];
@@ -927,6 +1124,10 @@ public class App {
         do {
             System.out.print("Opção: ");
             optionStudent = Integer.parseInt(scanner.readLine());
+
+            if (optionStudent < 1 || optionStudent > selectedClass.getStudentsNum()) {
+                System.out.println("Opção inválida.");
+            }
         } while (optionStudent < 1 || optionStudent > selectedClass.getStudentsNum());
 
         int[] idx = new int[studentNum];
@@ -952,6 +1153,10 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > count) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > count);
 
         Student student = students[idx[option - 1]];
@@ -971,6 +1176,10 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > classesNum) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > classesNum);
 
         Class selectedClass = classes[option - 1];
@@ -990,6 +1199,10 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > count) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > count);
 
         Subject subject = subjects[idx[option - 1]];
@@ -1006,13 +1219,18 @@ public class App {
 
         int option;
 
+        System.out.println("Escolha um aluno para alterar as notas: ");
+        for (int i = 0; i < studentNum; i++) {
+            System.out.printf("%-2d - %-35s %-30s", (i + 1), students[i].getName(), students[i].getCourse().getName());
+        }
+
         do {
-            System.out.println("Escolha um aluno para alterar as notas: ");
-            for (int i = 0; i < studentNum; i++) {
-                System.out.printf("%-2d - %-35s %-30s", (i + 1), students[i].getName(), students[i].getCourse().getName());
-            }
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > studentNum) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > studentNum);
 
         Student student = students[option - 1];
@@ -1037,6 +1255,10 @@ public class App {
         do {
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > count) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > count);
 
         Grade grade = grades[idx[option - 1]];
@@ -1046,6 +1268,10 @@ public class App {
         do {
             System.out.print("Digite a nova nota: ");
             value = Double.parseDouble(scanner.readLine());
+
+            if (value < 0 || value > 10) {
+                System.out.println("Valor inválido.");
+            }
         } while (value < 0 || value > 10);
 
         System.out.printf("Nota alterada com sucesso para: %.2f", value);
@@ -1180,16 +1406,19 @@ public class App {
 
         int option;
 
+        System.out.println("Escolha um aluno:");
+
+        for (int i = 0; i < studentNum; i++) {
+            System.out.println((i + 1) + " - " + students[i].getName());
+        }
+
         do {
-            System.out.println("Escolha um aluno:");
-
-            for (int i = 0; i < studentNum; i++) {
-                System.out.println((i + 1) + " - " + students[i].getName());
-            }
-
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
 
+            if (option < 1 || option > studentNum) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > studentNum);
 
         Student selected = students[option - 1];
@@ -1203,28 +1432,29 @@ public class App {
 
         System.out.println("\nNotas:");
 
-        double sum = 0;
-        int count = 0;
+        double sum = 0, totalWeight = 0;
 
         for (int i = 0; i < gradeNum; i++) {
             if (grades[i].getStudent().getIdentification() == selected.getIdentification()) {
-                System.out.println(grades[i].getAssessment().getDescription() + " | Nota: " + grades[i].getValue());
-                sum += grades[i].getValue();
-                count++;
+                System.out.println(grades[i].getAssessment().getDescription() + " | Nota: " + grades[i].getValue() + " | Peso: " + grades[i].getAssessment().getWeight());
+                sum += grades[i].getValue() * grades[i].getAssessment().getWeight();
+                totalWeight += grades[i].getAssessment().getWeight();
             }
         }
 
-        if (count == 0) {
+        if (totalWeight == 0) {
             System.out.println("Nenhuma nota registrada.");
-        } else {
-            double average = sum / count;
-            System.out.println("\nMédia final: " + average);
+            return;
+        }
 
-            if (average >= 7) {
-                System.out.println("Situação: APROVADO");
-            } else {
-                System.out.println("Situação: REPROVADO");
-            }
+        double average = sum/totalWeight;
+
+        System.out.println("Média final: " + average);
+
+        if (average >= 7) {
+            System.out.println("Sytuação: APROVADO");
+        } else {
+            System.out.println("Situação: REPROVADO");
         }
     }
 
@@ -1351,10 +1581,11 @@ public class App {
         for (int i = 0; i < gradeNum; i++) sorted[i] = grades[i];
 
         /*
-            Adicionado Bubble Sort, estudado em aula e retirado dos slides da professora.
+            Adicionado Bubble Sort, estudado em aula e retirado dos slides da professora,
+            porém, otimizado para percorrer apenas indices necessários do vetor.
          */
-        for (int i = 0; i < gradeNum; i++) {
-            for (int j = 0; j < gradeNum; j++) {
+        for (int i = 0; i < gradeNum - 1; i++) {
+            for (int j = 0; j < gradeNum - 1 - i; j++) {
                 boolean swap = (option == 1) ? sorted[j].getValue() < sorted[j + 1].getValue() : sorted[j].getValue() > sorted[j + 1].getValue();
                 if (swap) {
                     Grade tmp = sorted[j];
@@ -1398,22 +1629,21 @@ public class App {
 
         double[] averages = new double[studentNum];
         for (int i = 0; i < studentNum; i++) {
-            double sum = 0.0;
-            int count = 0;
+            double sum = 0, totalWeight = 0;
             for (int j = 0; j < gradeNum; j++) {
                 if (grades[j].getStudent().getIdentification() == students[i].getIdentification()) {
-                    sum += grades[j].getValue();
-                    count++;
+                    sum += grades[j].getValue() * grades[j].getAssessment().getWeight();
+                    totalWeight += grades[j].getAssessment().getWeight();
                 }
             }
-            averages[i] = (count > 0) ? sum / count : -1;
+            averages[i] = (totalWeight > 0) ? sum / totalWeight : -1;
         }
 
         int[] idx = new int[studentNum];
         for (int i = 0; i < studentNum; i++) idx[i] = i;
 
-        for (int i = 0; i < studentNum; i++) {
-            for (int j = 0; j < studentNum; j++) {
+        for (int i = 0; i < studentNum - 1; i++) {
+            for (int j = 0; j < studentNum - 1 - i; j++) {
                 boolean swap = (option == 1) ? averages[idx[j]] < averages[idx[j + 1]] : averages[idx[j]] > averages[idx[j + 1]];
                 if (swap) {
                     int tmp = idx[j];
@@ -1490,20 +1720,20 @@ public class App {
         System.out.printf("%-10s %-35s %-8s%n", "Turma", "Matéria", "Média");
 
         for (int i = 0; i < classesNum; i++) {
-            double sum = 0;
-            int count = 0;
+            double sum = 0, totalWeight = 0;
             for (int j = 0; j < gradeNum; j++) {
                 if (grades[j].getAssessment().getSubject() == classes[i].getSubject()) {
                     for (int k = 0; k < classes[i].getStudentsNum(); k++) {
                         if (grades[j].getStudent().getIdentification() == classes[i].getStudents()[k].getIdentification()) {
-                            sum += grades[j].getValue();
-                            count++;
+                            sum += grades[j].getValue() * grades[j].getAssessment().getWeight();
+                            totalWeight += grades[j].getAssessment().getWeight();
                             break;
                         }
                     }
                 }
             }
-            String average = (count > 0) ? String.format("%.2f", sum / count) : "Sem notas";
+
+            String average = (totalWeight > 0) ? String.format("%.2f", sum/totalWeight) : "Sem notas";
             System.out.printf("%-10s %-35s %-8s%n", classes[i].getName(), classes[i].getSubject().getName(), average);
         }
     }
@@ -1515,11 +1745,17 @@ public class App {
         }
 
         int option;
+
+        System.out.println("Escolha um aluno:");
+        for (int i = 0; i < studentNum; i++) System.out.println((i + 1) + " - " + students[i].getName());
+
         do {
-            System.out.println("Escolha um aluno:");
-            for (int i = 0; i < studentNum; i++) System.out.println((i + 1) + " - " + students[i].getName());
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > studentNum) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > studentNum);
 
         Student student = students[option - 1];
@@ -1537,74 +1773,83 @@ public class App {
             }
             if (!inClass) continue;
 
-            double sum = 0;
-            int count = 0;
+            double sum = 0, totalWeight = 0;
             for (int k = 0; k < gradeNum; k++) {
                 if (grades[k].getStudent().getIdentification() == student.getIdentification() && grades[k].getAssessment().getSubject() == classes[i].getSubject()) {
-                    sum += grades[k].getValue();
-                    count++;
+                    sum += grades[k].getValue() * grades[k].getAssessment().getWeight();
+                    totalWeight += grades[k].getAssessment().getWeight();
                 }
             }
 
-            String average = (count > 0) ? String.format("%.2f", sum / count) : "Sem notas";
+            String average = (totalWeight > 0) ? String.format("%.2f", sum / totalWeight) : "Sem notas";
             System.out.printf("%-35s %-10s %-8s%n", classes[i].getSubject().getName(), classes[i].getName(), average);
         }
     }
 
     private static void averageCourse(BufferedReader scanner) throws Exception {
         int option;
+
+        System.out.println("Escolha o curso:");
+        for (int i = 0; i < courses.length; i++) System.out.println((i + 1) + " - " + courses[i].getName());
+
         do {
-            System.out.println("Escolha o curso:");
-            for (int i = 0; i < courses.length; i++) System.out.println((i + 1) + " - " + courses[i].getName());
             System.out.print("Opção: ");
             option = Integer.parseInt(scanner.readLine());
+
+            if (option < 1 || option > courses.length) {
+                System.out.println("Opção inválida.");
+            }
         } while (option < 1 || option > courses.length);
 
         Course course = courses[option - 1];
 
-        double sum = 0;
-        int count = 0;
+        double sum = 0, totalWeight = 0;
         for (int i = 0; i < gradeNum; i++) {
             if (grades[i].getStudent().getCourse().getCode() == course.getCode()) {
-                sum += grades[i].getValue();
-                count++;
+                sum += grades[i].getValue() * grades[i].getAssessment().getWeight();
+                totalWeight += grades[i].getAssessment().getWeight();
             }
         }
 
-        if (count == 0) {
+        if (totalWeight == 0) {
             System.out.println("Nenhuma nota registrada nesse curso.");
             return;
         }
 
-        System.out.printf("Média geral do curso %s: %.2f", course.getName(), (sum/count));
+        System.out.printf("Média geral do curso %s: %.2f", course.getName(), (sum/totalWeight));
     }
 
     private static void averageSubject(BufferedReader scanner) throws Exception {
         int option;
+
+        System.out.println("Escolha a matéria:");
+        for (int i = 0; i < subjects.length; i++) System.out.println((i + 1) + " - " + subjects[i].getName());
+
         do {
-            System.out.println("Escolha a matéria:");
-            for (int i = 0; i < assessments.length; i++) System.out.println((i + 1) + " - " + assessments[i].getDescription());
             System.out.print("Opções: ");
             option = Integer.parseInt(scanner.readLine());
-        } while (option < 1 || option > assessments.length);
+
+            if (option < 1 || option > subjects.length) {
+                System.out.println("Opção inválida.");
+            }
+        } while (option < 1 || option > subjects.length);
 
         Subject subject = subjects[option - 1];
 
-        double sum = 0;
-        int count = 0;
+        double sum = 0, totalWeight = 0;
         for (int i = 0; i < gradeNum; i++) {
             if (grades[i].getAssessment().getSubject() == subject) {
-                sum += grades[i].getValue();
-                count++;
+                sum += grades[i].getValue() * grades[i].getAssessment().getWeight();
+                totalWeight += grades[i].getAssessment().getWeight();
             }
         }
 
-        if (count == 0) {
+        if (totalWeight == 0) {
             System.out.println("Nenhuma nota registrada nessa turma!");
             return;
         }
 
-        System.out.printf("Média da matéria %s: %.2f", subject.getName(), (sum/count));
+        System.out.printf("Média da matéria %s: %.2f", subject.getName(), (sum/totalWeight));
     }
 
     private static void averageGeneral() {
@@ -1613,10 +1858,13 @@ public class App {
             return;
         }
 
-        double sum = 0;
-        for (int i = 0; i < gradeNum; i++) sum += grades[i].getValue();
+        double sum = 0, totalWeight = 0;
+        for (int i = 0; i < gradeNum; i++) {
+            sum += grades[i].getValue() * grades[i].getAssessment().getWeight();
+            totalWeight += grades[i].getAssessment().getWeight();
+        }
 
-        System.out.printf("Média geral de todas as notas: %.2f", (sum/gradeNum));
+        System.out.printf("Média geral de todas as notas: %.2f", (sum/totalWeight));
     }
 
     /*
