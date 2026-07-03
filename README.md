@@ -144,6 +144,7 @@ Ou simplesmente abrir o projeto no IntelliJ e rodar a classe `App`.
 - `Testes - Todos integrantes`
 - `Procurar bugs - Gabriel`
 - `Resolução de bugs - João Vitor`
+- `README - Leonardo e João Vitor`
 
 ## Lições aprendidas
 
