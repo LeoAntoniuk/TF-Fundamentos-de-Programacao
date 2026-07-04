@@ -29,7 +29,7 @@ A ideia do projeto é simular um sistema acadêmico de uma faculdade, onde dá p
 - Leonardo Antoniuk - 26103880
 - João Vitor - 26103549
 - José Lucas Freitas - 26103574
--
+- Gabriel Gemelli Bonadiman - 26102989
 
 ---
 
