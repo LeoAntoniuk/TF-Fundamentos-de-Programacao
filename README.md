@@ -27,7 +27,7 @@ A ideia do projeto é simular um sistema acadêmico de uma faculdade, onde dá p
 ## Integrantes do grupo
 
 - Leonardo Antoniuk - 26103880
--
+- João Vitor - 26103549
 -
 -
 
