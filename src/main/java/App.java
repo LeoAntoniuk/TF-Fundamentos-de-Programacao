@@ -68,7 +68,7 @@ public class App {
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             switch (option) {
                 case 0:
@@ -162,8 +162,8 @@ public class App {
         assessments[6] = new Assessment("Trabalho 2", 0.1, subjects[1], classes);
         assessments[7] = new Assessment("Trabalho 3", 0.1, subjects[1], classes);
         assessments[8] = new Assessment("Prova 1", 0.6, subjects[2], classes);
-        assessments[9] = new Assessment("Trabalho 1", 0.3, subjects[2], classes);
-        assessments[10] = new Assessment("Trabalho 2", 0.3, subjects[2], classes);
+        assessments[9] = new Assessment("Trabalho 1", 0.2, subjects[2], classes);
+        assessments[10] = new Assessment("Trabalho 2", 0.2, subjects[2], classes);
         assessments[11] = new Assessment("Trabalho 1", 0.3, subjects[3], classes);
         assessments[12] = new Assessment("Trabalho 2", 0.3, subjects[3], classes);
         assessments[13] = new Assessment("Trabalho 3", 0.4, subjects[3], classes);
@@ -234,7 +234,7 @@ public class App {
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             switch (option) {
                 case 0:
@@ -353,12 +353,12 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > teachersNum) {
                 System.out.println("Opção inválida.");
             }
-        } while (option > teachersNum);
+        } while (option < 1 || option > teachersNum);
 
         Teacher teacher = teachers[option - 1];
 
@@ -369,7 +369,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > subjects.length) {
                 System.out.println("Opção inválida.");
@@ -409,7 +409,7 @@ public class App {
 
         do {
             System.out.print("Digite a idade do estudante: ");
-            studentAge = Integer.parseInt(scanner.readLine());
+            studentAge = readInt(scanner);
 
             if (studentAge < 1 || studentAge > 120) {
                 System.out.println("Idade inválida.");
@@ -423,7 +423,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > courses.length) {
                 System.out.println("Opção inválida.");
@@ -459,7 +459,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > classesNum) {
                 System.out.println("Opção inválida.");
@@ -482,7 +482,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > classSelected.getStudentsNum()) {
                 System.out.println("Opção inválida.");
@@ -494,22 +494,27 @@ public class App {
         System.out.println("Escolha qual avaliação você deseja cadastrar nota.");
         System.out.printf("%-10s %-25s%n", "Opção", "Avaliação");
 
+        int[] idxAssessment = new int[assessments.length];
+        int countAssessment = 0;
+
         for (int i = 0; i < assessments.length; i++) {
             if (assessments[i].getSubject() == classSelected.getSubject()) {
-                System.out.printf("%-10d %-25s%n", (i + 1), assessments[i].getDescription());
+                idxAssessment[countAssessment] = i;
+                System.out.printf("%-10d %-25s%n", (countAssessment + 1), assessments[i].getDescription());
+                countAssessment++;
             }
         }
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
-            if (option < 1 || option > assessments.length) {
+            if (option < 1 || option > countAssessment) {
                 System.out.println("Opção inválida.");
             }
-        } while (option < 1 || option > assessments.length);
+        } while (option < 1 || option > countAssessment);
 
-        Assessment assessment = assessments[option - 1];
+        Assessment assessment = assessments[idxAssessment[option - 1]];
 
         for (int i  = 0; i < gradeNum; i++) {
             if (grades[i].getStudent().getIdentification() == student.getIdentification() && grades[i].getAssessment() == assessment) {
@@ -522,7 +527,7 @@ public class App {
 
         do {
             System.out.print("Qual o valor da nota: ");
-            value = Double.parseDouble(scanner.readLine());
+            value = readDouble(scanner);
 
             if (value < 0 || value > 10) {
                 System.out.println("Valor inválido.");
@@ -550,7 +555,7 @@ public class App {
 
         System.out.println("Escolha qual turma deseja adicionar um aluno.");
 
-        int count = 0, option, seccondCount = 0;
+        int count = 0, option, secondCount = 0;
 
         int[] idx = new int[classesNum];
 
@@ -562,9 +567,14 @@ public class App {
             }
         }
 
+        if (count == 0) {
+            System.out.println("Todas as turmas estão cheias!");
+            return;
+        }
+
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > count) {
                 System.out.println("Opção inválida.");
@@ -573,7 +583,7 @@ public class App {
 
         Class classSelected = classes[idx[option - 1]];
 
-        Student[] avaibleStudents = new Student[MAX_STUDENTS];
+        Student[] availableStudents = new Student[MAX_STUDENTS];
 
         System.out.println("Escolha qual aluno deseja adicionar à turma:");
         for (int i = 0; i < studentNum; i++) {
@@ -586,27 +596,27 @@ public class App {
             }
 
             if (!exists) {
-                avaibleStudents[seccondCount] = students[i];
-                System.out.printf("%-10d - %-35s | %-25s%n", (seccondCount + 1), students[i].getName(), students[i].getCourse().getName());
-                seccondCount++;
+                availableStudents[secondCount] = students[i];
+                System.out.printf("%-10d - %-35s | %-25s%n", (secondCount + 1), students[i].getName(), students[i].getCourse().getName());
+                secondCount++;
             }
+        }
+
+        if (secondCount == 0) {
+            System.out.println("Todos os alunos já estão cadastrados nessa turma!");
+            return;
         }
 
         do {
             System.out.printf("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
-            if (option < 1 || option > seccondCount) {
+            if (option < 1 || option > secondCount) {
                 System.out.println("Opção inválida.");
             }
-        } while (option < 1 || option > seccondCount);
+        } while (option < 1 || option > secondCount);
 
-        Student student = avaibleStudents[option - 1];
-
-        if (seccondCount == 0) {
-            System.out.println("Todos os alunos já estão cadastrados nessa turma!");
-            return;
-        }
+        Student student = availableStudents[option - 1];
 
         classSelected.getStudents()[classSelected.getStudentsNum()] = student;
         classSelected.setStudentsNum(classSelected.getStudentsNum() + 1);
@@ -631,7 +641,7 @@ public class App {
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             switch (option) {
                 case 0:
@@ -672,12 +682,12 @@ public class App {
             System.out.println("Sistema Acadêmico - Alterações - Professor");
             System.out.println(" ");
             System.out.println("0 - Voltar ao menu de alterações");
-            System.out.println("1 - Alterar nome do progessor");
+            System.out.println("1 - Alterar nome do professor");
             System.out.println("2 - Alterar graduação do professor");
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             switch (option) {
                 case 0:
@@ -700,12 +710,12 @@ public class App {
 
         System.out.println("Escolha um professor:");
         for (int i = 0; i < teachersNum; i++) {
-            System.out.printf("%-5d - %-15d %-35s %-25s", (i + 1), teachers[i].getIdentification(), teachers[i].getName(), teachers[i].getGraduation());
+            System.out.printf("%-5d - %-15d %-35s %-25s%n", (i + 1), teachers[i].getIdentification(), teachers[i].getName(), teachers[i].getGraduation());
         }
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > teachersNum) {
                 System.out.println("Opção inválida.");
@@ -734,12 +744,12 @@ public class App {
 
         System.out.println("Escolha um professor:");
         for (int i = 0; i < teachersNum; i++) {
-            System.out.printf("%-5d - %-15d %-35s %-25s", (i + 1), teachers[i].getIdentification(), teachers[i].getName(), teachers[i].getGraduation());
+            System.out.printf("%-5d - %-15d %-35s %-25s%n", (i + 1), teachers[i].getIdentification(), teachers[i].getName(), teachers[i].getGraduation());
         }
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > teachersNum) {
                 System.out.println("Opção inválida.");
@@ -765,7 +775,7 @@ public class App {
 
     private static void changesStudent(BufferedReader scanner) throws Exception {
         if (studentNum == 0) {
-            System.out.println("Nenhuma estudante registrado.");
+            System.out.println("Nenhum estudante registrado.");
             return;
         }
 
@@ -783,7 +793,7 @@ public class App {
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             switch (option) {
                 case 0:
@@ -817,7 +827,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > studentNum) {
                 System.out.println("Opção inválida.");
@@ -851,7 +861,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > studentNum) {
                 System.out.println("Opção inválida.");
@@ -864,7 +874,7 @@ public class App {
 
         do {
             System.out.print("Digite a idade que deseja: ");
-            age = Integer.parseInt(scanner.readLine());
+            age = readInt(scanner);
 
             if (age < 1 || age > 120) {
                 System.out.println("Idade inválida.");
@@ -885,7 +895,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > studentNum) {
                 System.out.println("Opção inválida.");
@@ -908,7 +918,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > count) {
                 System.out.println("Opção inválida.");
@@ -936,7 +946,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > studentNum) {
                 System.out.println("Opção inválida.");
@@ -947,7 +957,7 @@ public class App {
 
         do {
             System.out.print("Digite o semestres: ");
-            semester = Integer.parseInt(scanner.readLine());
+            semester = readInt(scanner);
 
             if (semester < 1 || semester > student.getCourse().getDuration()) {
                 System.out.println("Semestre inválido.");
@@ -978,7 +988,7 @@ public class App {
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             switch (option) {
                 case 0:
@@ -1012,7 +1022,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > classesNum) {
                 System.out.println("Opção inválida.");
@@ -1023,14 +1033,23 @@ public class App {
 
         do {
             System.out.print("Digite o número da turma: ");
-            num = Integer.parseInt(scanner.readLine());
+            num = readInt(scanner);
 
             if (num < 1 || num >= 1000) {
                 System.out.println("Coloque um número entre 1 e 999.");
             }
         } while (num < 1 || num >= 1000);
 
-        selectedClass.setName("Turma " + num);
+        String newName = "Turma " + num;
+
+        for (int i = 0; i < classesNum; i++) {
+            if (newName.equalsIgnoreCase(classes[i].getName())) {
+                System.out.println("Essa turma já existe!");
+                return;
+            }
+        }
+
+        selectedClass.setName(newName);
         System.out.println("Número da turma alterado com sucesso!");
     }
 
@@ -1049,7 +1068,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > classesNum) {
                 System.out.println("Opção inválida.");
@@ -1070,9 +1089,14 @@ public class App {
             }
         }
 
+        if (count == 0) {
+            System.out.println("Não há outro professor disponível para essa turma!");
+            return;
+        }
+
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > count) {
                 System.out.println("Opção inválida.");
@@ -1100,7 +1124,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > classesNum) {
                 System.out.println("Opção inválida.");
@@ -1123,7 +1147,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            optionStudent = Integer.parseInt(scanner.readLine());
+            optionStudent = readInt(scanner);
 
             if (optionStudent < 1 || optionStudent > selectedClass.getStudentsNum()) {
                 System.out.println("Opção inválida.");
@@ -1150,9 +1174,14 @@ public class App {
             }
         }
 
+        if (count == 0) {
+            System.out.println("Não há outro aluno disponível para colocar nessa turma!");
+            return;
+        }
+
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > count) {
                 System.out.println("Opção inválida.");
@@ -1175,7 +1204,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > classesNum) {
                 System.out.println("Opção inválida.");
@@ -1191,14 +1220,14 @@ public class App {
         for (int i = 0; i < subjects.length; i++) {
             if (subjects[i].getCode() != selectedClass.getSubject().getCode()) {
                 idx[count] = i;
-                System.out.printf("%-5d - %-10d %-35s %-10s", (count + 1), subjects[i].getCode(), subjects[i].getName(), subjects[i].getWorkload() + " Horas");
+                System.out.printf("%-5d - %-10d %-35s %-10s%n", (count + 1), subjects[i].getCode(), subjects[i].getName(), subjects[i].getWorkload() + " Horas");
                 count++;
             }
         }
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > count) {
                 System.out.println("Opção inválida.");
@@ -1221,12 +1250,12 @@ public class App {
 
         System.out.println("Escolha um aluno para alterar as notas: ");
         for (int i = 0; i < studentNum; i++) {
-            System.out.printf("%-2d - %-35s %-30s", (i + 1), students[i].getName(), students[i].getCourse().getName());
+            System.out.printf("%-2d - %-35s %-30s%n", (i + 1), students[i].getName(), students[i].getCourse().getName());
         }
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > studentNum) {
                 System.out.println("Opção inválida.");
@@ -1242,7 +1271,7 @@ public class App {
         for (int i = 0; i < gradeNum; i++) {
             if (grades[i].getStudent().getIdentification() == student.getIdentification()) {
                 idx[count] = i;
-                System.out.printf("%-2d - %-35s Peso: %-5.2f Nota: %-5.2f", (count + 1), grades[i].getAssessment().getDescription(), (grades[i].getAssessment().getWeight() * 10), grades[i].getValue());
+                System.out.printf("%-2d - %-35s Peso: %-5.2f Nota: %-5.2f%n", (count + 1), grades[i].getAssessment().getDescription(), (grades[i].getAssessment().getWeight() * 10), grades[i].getValue());
                 count++;
             }
         }
@@ -1254,7 +1283,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > count) {
                 System.out.println("Opção inválida.");
@@ -1267,14 +1296,14 @@ public class App {
 
         do {
             System.out.print("Digite a nova nota: ");
-            value = Double.parseDouble(scanner.readLine());
+            value = readDouble(scanner);
 
             if (value < 0 || value > 10) {
                 System.out.println("Valor inválido.");
             }
         } while (value < 0 || value > 10);
 
-        System.out.printf("Nota alterada com sucesso para: %.2f", value);
+        System.out.printf("Nota alterada com sucesso para: %.2f%n", value);
         grade.setValue(value);
     }
 
@@ -1298,10 +1327,11 @@ public class App {
             System.out.println("5 - Informações de matérias");
             System.out.println("6 - Informações de avaliações");
             System.out.println("7 - Informações de notas");
+            System.out.println("8 - Boletim da turma");
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             switch (option) {
                 case 0:
@@ -1328,6 +1358,9 @@ public class App {
                 case 7:
                     informationGrades();
                     break;
+                case 8:
+                    informationsReportCard(scanner);
+                    break;
                 default:
                     System.out.println("Opção inválida.");
             }
@@ -1344,10 +1377,10 @@ public class App {
         }
 
         System.out.println("Informações dos professores:");
-        System.out.printf("%-15s %-35s %-20s%n", "Mátricula", "Professor", "Graduação");
+        System.out.printf("%-15s %-35s %-20s%n", "Matrícula", "Professor", "Graduação");
 
         for (int i = 0; i < teachersNum; i++) {
-            System.out.printf("%-15d %-25s %-20s%n", teachers[i].getIdentification(), teachers[i].getName(), teachers[i].getGraduation());
+            System.out.printf("%-15d %-35s %-20s%n", teachers[i].getIdentification(), teachers[i].getName(), teachers[i].getGraduation());
         }
     }
 
@@ -1364,7 +1397,7 @@ public class App {
         System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
         System.out.printf("Escolha uma opção: ");
 
-        int option = Integer.parseInt(scanner.readLine());
+        int option = readInt(scanner);
 
         switch (option) {
             case 1:
@@ -1388,10 +1421,10 @@ public class App {
         }
 
         System.out.println("Informação dos alunos:");
-        System.out.printf("%-15s %-35s %-10s %-25s %-10s%n", "Mátricula", "Aluno", "Idade", "Curso", "Semestre");
+        System.out.printf("%-15s %-35s %-10s %-25s %-10s%n", "Matrícula", "Aluno", "Idade", "Curso", "Semestre");
 
         for (int i = 0; i < studentNum; i++) {
-            System.out.printf("%-15d %-35s %-10d %-25s %-10d", students[i].getIdentification(), students[i].getName(), students[i].getAge(), students[i].getCourse().getName(), students[i].getSemester());
+            System.out.printf("%-15d %-35s %-10d %-25s %-10d%n", students[i].getIdentification(), students[i].getName(), students[i].getAge(), students[i].getCourse().getName(), students[i].getSemester());
         }
     }
 
@@ -1414,7 +1447,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > studentNum) {
                 System.out.println("Opção inválida.");
@@ -1452,7 +1485,7 @@ public class App {
         System.out.println("Média final: " + average);
 
         if (average >= 7) {
-            System.out.println("Sytuação: APROVADO");
+            System.out.println("Situação: APROVADO");
         } else {
             System.out.println("Situação: REPROVADO");
         }
@@ -1498,7 +1531,15 @@ public class App {
         System.out.printf("%-15s %-5s %-25s %-7s%n", "Avaliação", "Peso", "Matéria", "Turmas");
 
         for (int i = 0; i < assessments.length; i++) {
-            System.out.printf("%-15s %-5.2f %-35s %-7d%n", assessments[i].getDescription(), assessments[i].getWeight(), assessments[i].getSubject().getName(), assessments[i].getAcademicClass().length);
+            int classCount = 0;
+
+            for (int j = 0; j < classesNum; j++) {
+                if (classes[j].getSubject() == assessments[i].getSubject()) {
+                    classCount++;
+                }
+            }
+
+            System.out.printf("%-15s %-5.2f %-35s %-7d%n", assessments[i].getDescription(), assessments[i].getWeight(), assessments[i].getSubject().getName(), classCount);
         }
     }
 
@@ -1513,6 +1554,105 @@ public class App {
         for (int i = 0; i < gradeNum; i++) {
             Grade grade = grades[i];
             System.out.printf("%-25s %-35s %-20s %-10.2f%n", grade.getStudent().getName(), grade.getAssessment().getSubject().getName(), grade.getAssessment().getDescription(), grade.getValue());
+        }
+    }
+
+    /*
+        Boletim da turma, funcionalidade que usa MATRIZ.
+        Cada linha da matriz é um aluno da turma e cada coluna é uma
+        avaliação da matéria. A última coluna impressa é a média ponderada.
+        Começa tudo com -1, que significa "sem nota lançada".
+     */
+    private static void informationsReportCard(BufferedReader scanner) throws Exception {
+        if (classesNum == 0) {
+            System.out.println("Nenhuma turma cadastrada!");
+            return;
+        }
+
+        int option;
+
+        System.out.println("Escolha a turma para gerar o boletim.");
+        for (int i = 0; i < classesNum; i++) {
+            System.out.println((i + 1) + " - " + classes[i].getName() + " | " + classes[i].getSubject().getName());
+        }
+
+        do {
+            System.out.print("Opção: ");
+            option = readInt(scanner);
+
+            if (option < 1 || option > classesNum) {
+                System.out.println("Opção inválida.");
+            }
+        } while (option < 1 || option > classesNum);
+
+        Class classSelected = classes[option - 1];
+
+        if (classSelected.getStudentsNum() == 0) {
+            System.out.println("Essa turma não possui alunos!");
+            return;
+        }
+
+        //Avaliações da matéria da turma, mesmo padrão de vetor de índices dos cadastros
+        int[] idxAssessment = new int[assessments.length];
+        int countAssessment = 0;
+
+        for (int i = 0; i < assessments.length; i++) {
+            if (assessments[i].getSubject() == classSelected.getSubject()) {
+                idxAssessment[countAssessment] = i;
+                countAssessment++;
+            }
+        }
+
+        //Matriz do boletim: linhas = alunos, colunas = avaliações
+        double[][] reportCard = new double[classSelected.getStudentsNum()][countAssessment];
+
+        for (int i = 0; i < classSelected.getStudentsNum(); i++) {
+            for (int j = 0; j < countAssessment; j++) {
+                reportCard[i][j] = -1;
+            }
+        }
+
+        //Preenche a matriz percorrendo o vetor de notas
+        for (int i = 0; i < classSelected.getStudentsNum(); i++) {
+            for (int j = 0; j < countAssessment; j++) {
+                for (int k = 0; k < gradeNum; k++) {
+                    if (grades[k].getStudent().getIdentification() == classSelected.getStudents()[i].getIdentification()
+                            && grades[k].getAssessment() == assessments[idxAssessment[j]]) {
+                        reportCard[i][j] = grades[k].getValue();
+                    }
+                }
+            }
+        }
+
+        System.out.println("\nBoletim da " + classSelected.getName() + " - " + classSelected.getSubject().getName());
+        System.out.printf("%-30s", "Aluno");
+
+        for (int j = 0; j < countAssessment; j++) {
+            System.out.printf("%-15s", assessments[idxAssessment[j]].getDescription());
+        }
+
+        System.out.printf("%-8s%n", "Média");
+
+        for (int i = 0; i < classSelected.getStudentsNum(); i++) {
+            System.out.printf("%-30s", classSelected.getStudents()[i].getName());
+
+            double sum = 0, totalWeight = 0;
+
+            for (int j = 0; j < countAssessment; j++) {
+                if (reportCard[i][j] >= 0) {
+                    System.out.printf("%-15.2f", reportCard[i][j]);
+                    sum += reportCard[i][j] * assessments[idxAssessment[j]].getWeight();
+                    totalWeight += assessments[idxAssessment[j]].getWeight();
+                } else {
+                    System.out.printf("%-15s", "-");
+                }
+            }
+
+            if (totalWeight > 0) {
+                System.out.printf("%-8.2f%n", (sum / totalWeight));
+            } else {
+                System.out.printf("%-8s%n", "-");
+            }
         }
     }
 
@@ -1532,7 +1672,7 @@ public class App {
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             switch (option) {
                 case 0:
@@ -1564,7 +1704,7 @@ public class App {
             System.out.println("2 - Menores notas até maiores");
             System.out.print("Opção: ");
 
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             switch (option) {
                 case 1:
@@ -1615,7 +1755,7 @@ public class App {
             System.out.println("2 - Menor média para a maior");
             System.out.print("Opção: ");
 
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             switch (option) {
                 case 1:
@@ -1676,15 +1816,15 @@ public class App {
             System.out.println("Sistema Acadêmico - Médias");
             System.out.println(" ");
             System.out.println("0 - Voltar ao menu principal");
-            System.out.println("1 - Média dos alunos por turma/matéria");
-            System.out.println("2 - Média das turmas por matéria");
+            System.out.println("1 - Média das turmas por matéria");
+            System.out.println("2 - Média de um aluno por matéria");
             System.out.println("3 - Média do curso");
             System.out.println("4 - Média de uma matéria");
             System.out.println("5 - Média geral de tudo");
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             switch (option) {
                 case 0:
@@ -1751,7 +1891,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > studentNum) {
                 System.out.println("Opção inválida.");
@@ -1794,7 +1934,7 @@ public class App {
 
         do {
             System.out.print("Opção: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > courses.length) {
                 System.out.println("Opção inválida.");
@@ -1816,7 +1956,7 @@ public class App {
             return;
         }
 
-        System.out.printf("Média geral do curso %s: %.2f", course.getName(), (sum/totalWeight));
+        System.out.printf("Média geral do curso %s: %.2f%n", course.getName(), (sum/totalWeight));
     }
 
     private static void averageSubject(BufferedReader scanner) throws Exception {
@@ -1827,7 +1967,7 @@ public class App {
 
         do {
             System.out.print("Opções: ");
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             if (option < 1 || option > subjects.length) {
                 System.out.println("Opção inválida.");
@@ -1849,7 +1989,7 @@ public class App {
             return;
         }
 
-        System.out.printf("Média da matéria %s: %.2f", subject.getName(), (sum/totalWeight));
+        System.out.printf("Média da matéria %s: %.2f%n", subject.getName(), (sum/totalWeight));
     }
 
     private static void averageGeneral() {
@@ -1864,11 +2004,11 @@ public class App {
             totalWeight += grades[i].getAssessment().getWeight();
         }
 
-        System.out.printf("Média geral de todas as notas: %.2f", (sum/totalWeight));
+        System.out.printf("Média geral de todas as notas: %.2f%n", (sum/totalWeight));
     }
 
     /*
-        Menu para poder buscar alunos, turmass, cursos, matérias e professores.
+        Menu para poder buscar alunos, turmas, cursos, matérias e professores.
      */
     private static void search(BufferedReader scanner) throws Exception {
         int option;
@@ -1886,7 +2026,7 @@ public class App {
             System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             System.out.printf("Escolha uma opção: ");
 
-            option = Integer.parseInt(scanner.readLine());
+            option = readInt(scanner);
 
             switch (option) {
                 case 0:
@@ -1918,7 +2058,7 @@ public class App {
         String name = scanner.readLine().toLowerCase();
 
         boolean found = false;
-        System.out.printf("%-15s %-35s %-20s%n", "Mátricula", "Nome", "Graduação");
+        System.out.printf("%-15s %-35s %-20s%n", "Matrícula", "Nome", "Graduação");
         for (int i = 0; i < teachersNum; i++) {
             if (teachers[i].getName().toLowerCase().contains(name)) {
                 System.out.printf("%-15d %-35s %-20s%n", teachers[i].getIdentification(), teachers[i].getName(), teachers[i].getGraduation());
@@ -1934,7 +2074,7 @@ public class App {
         String name = scanner.readLine().toLowerCase();
 
         boolean found = false;
-        System.out.printf("%-15s %-35s %-10s %-35s %-10s%n", "Mátricula", "Aluno", "Idade", "Curso", "Semestre");
+        System.out.printf("%-15s %-35s %-10s %-35s %-10s%n", "Matrícula", "Aluno", "Idade", "Curso", "Semestre");
         for (int i = 0; i < studentNum; i++) {
             if (students[i].getName().toLowerCase().contains(name)) {
                 System.out.printf("%-15d %-35s %-10d %-35s %-10d%n", students[i].getIdentification(), students[i].getName(), students[i].getAge(), students[i].getCourse().getName(), students[i].getSemester());
@@ -1985,12 +2125,49 @@ public class App {
         System.out.printf("%-15s %-35s %-20s%n", "Identificação", "Matéria", "Carga Horária");
         for (int i = 0; i < subjects.length; i++) {
             if (subjects[i].getName().toLowerCase().contains(name)) {
-                System.out.printf("%-15d %-35s %-20s", subjects[i].getCode(), subjects[i].getName(), subjects[i].getWorkload() + " Horas");
+                System.out.printf("%-15d %-35s %-20s%n", subjects[i].getCode(), subjects[i].getName(), subjects[i].getWorkload() + " Horas");
                 found = true;
             }
         }
 
         if (!found) System.out.println("Nenhuma matéria encontrada!");
+    }
+
+    /*
+        Leitores com validação, para o programa não quebrar caso o usuário
+        digite letras onde se espera um número.
+        Mesma técnica do matches("\\d+") usada no cadastro de turma,
+        só que colocada em um método para não repetir código.
+     */
+    private static int readInt(BufferedReader scanner) throws Exception {
+        String input;
+
+        do {
+            input = scanner.readLine().trim();
+
+            //\d = numeros inteiros e + mais de um numero
+            if (!input.matches("\\d+")) {
+                System.out.print("Digite apenas números: ");
+            }
+        } while (!input.matches("\\d+"));
+
+        return Integer.parseInt(input);
+    }
+
+    private static double readDouble(BufferedReader scanner) throws Exception {
+        String input;
+
+        do {
+            //replace troca a vírgula por ponto, para aceitar nota como 9,5
+            input = scanner.readLine().trim().replace(",", ".");
+
+            //igual ao de cima, mas aceitando casas decimais depois do ponto
+            if (!input.matches("\\d+(\\.\\d+)?")) {
+                System.out.print("Digite apenas números: ");
+            }
+        } while (!input.matches("\\d+(\\.\\d+)?"));
+
+        return Double.parseDouble(input);
     }
 
     /*
@@ -2010,7 +2187,7 @@ public class App {
                     exists = true;
                 }
             }
-        } while (exists == true);
+        } while (exists);
 
         idGenerated[idNum] = id;
         idNum++;
