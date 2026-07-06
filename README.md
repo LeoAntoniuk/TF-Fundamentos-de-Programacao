@@ -138,6 +138,12 @@ O grupo utilizou a IA **Claude (Anthropic)** em etapas específicas do trabalho,
 
 O que a IA **não** fez: nenhuma funcionalidade do sistema (cadastros, alterações, buscas, rankings, médias) foi gerada por IA — foram todas escritas pelos integrantes ao longo do semestre. Também não foram introduzidos conceitos fora da ementa (nada de `try/catch`, `ArrayList` ou coleções): conferimos cada correção sugerida antes de aceitar, e entendemos o que cada uma faz — o que, inclusive, virou aprendizado sobre validação de entrada e casos extremos.
 
+### Imagens da utilização
+
+<img src="images/IA1.jpeg" width="800"/>
+<img src="images/IA2.jpeg" width="800"/>
+<img src="images/IA3.jpeg" width="800"/>
+
 ---
 
 ## Observações
