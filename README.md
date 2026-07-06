@@ -62,7 +62,7 @@ Quando o programa inicia, ele já vem com **3 cursos**, **39 matérias** e **59 
 
 <div align="center">
 
-<img height="180em" src="images/Diagrama%20TF%20-%20Sistema%20Acadêmico%20(Object%20Classes).png"/>
+<img height="180em" src="images/diagrama.jpeg"/>
 
 </div>
 
